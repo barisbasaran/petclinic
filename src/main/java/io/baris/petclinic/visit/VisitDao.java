@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * Manages visit in the database
+ * Manages visits in the database
  */
 public interface VisitDao {
 

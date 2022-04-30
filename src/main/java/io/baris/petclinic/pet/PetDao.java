@@ -10,7 +10,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.List;
 
 /**
- * Manages pet in the database
+ * Manages pets in the database
  */
 public interface PetDao {
 
