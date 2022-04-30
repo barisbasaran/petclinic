@@ -1,17 +1,18 @@
 package io.baris.petclinic.testing;
 
-import io.baris.petclinic.pet.PetDao;
+import io.baris.petclinic.pet.PetManager;
 import io.baris.petclinic.pet.model.CreatePet;
 import io.baris.petclinic.pet.model.Pet;
 import io.baris.petclinic.pet.model.Species;
-import io.baris.petclinic.vet.VetDao;
+import io.baris.petclinic.vet.VetManager;
 import io.baris.petclinic.vet.model.CreateVet;
 import io.baris.petclinic.vet.model.Vet;
-import io.baris.petclinic.visit.VisitDao;
+import io.baris.petclinic.visit.VisitManager;
 import io.baris.petclinic.visit.model.MakeVisit;
 import io.baris.petclinic.visit.model.Visit;
 import lombok.Getter;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.junit.rules.ExternalResource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -30,9 +31,9 @@ public class PostgreRule extends ExternalResource {
     @Getter
     private Jdbi jdbi;
 
-    private VetDao vetDao;
-    private PetDao petDao;
-    private VisitDao visitDao;
+    private VetManager vetManager;
+    private PetManager petManager;
+    private VisitManager visitManager;
 
     public PostgreRule(final String configPath) {
         this.container = PostgreUtils.getPostgreSQLContainer(configPath);
@@ -42,9 +43,11 @@ public class PostgreRule extends ExternalResource {
     @Override
     protected void before() {
         this.jdbi = Jdbi.create(container.getJdbcUrl(), container.getUsername(), container.getPassword());
-        this.vetDao = new VetDao(jdbi);
-        this.petDao = new PetDao(jdbi);
-        this.visitDao = new VisitDao(jdbi);
+        this.jdbi.installPlugin(new SqlObjectPlugin());
+
+        this.vetManager = new VetManager(jdbi);
+        this.petManager = new PetManager(jdbi);
+        this.visitManager = new VisitManager(jdbi);
 
         initDbSchema();
     }
@@ -55,11 +58,11 @@ public class PostgreRule extends ExternalResource {
     }
 
     public Optional<Vet> getVet(final String name) {
-        return vetDao.getVet(name);
+        return vetManager.getVet(name);
     }
 
     public void addVet(final String name) {
-        vetDao.createVet(
+        vetManager.createVet(
             CreateVet.builder()
                 .name(name)
                 .build()
@@ -67,7 +70,7 @@ public class PostgreRule extends ExternalResource {
     }
 
     public Optional<Pet> getPet(final String name) {
-        return petDao.getPet(name);
+        return petManager.getPet(name);
     }
 
     public void addPet(
@@ -75,7 +78,7 @@ public class PostgreRule extends ExternalResource {
         final int age,
         final Species species
     ) {
-        petDao.createPet(
+        petManager.createPet(
             CreatePet.builder()
                 .name(name)
                 .age(age)
@@ -85,7 +88,7 @@ public class PostgreRule extends ExternalResource {
     }
 
     public List<Visit> getPetVisits(final int petId) {
-        return visitDao.getPetVisits(petId);
+        return visitManager.getPetVisits(petId);
     }
 
     public void addPetVisit(
@@ -94,7 +97,7 @@ public class PostgreRule extends ExternalResource {
         final Instant date,
         final String treatment
     ) {
-        visitDao.makeVisit(
+        visitManager.makeVisit(
             MakeVisit.builder()
                 .petId(pet.getId())
                 .vetId(vet.getId())

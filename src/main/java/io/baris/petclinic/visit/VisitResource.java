@@ -12,12 +12,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 import static io.baris.petclinic.visit.VisitMapper.mapToMakeVisit;
-import static java.time.Instant.now;
 
 /**
  * Visit resource to serve visit endpoints
@@ -35,34 +35,41 @@ public class VisitResource {
 
     @Operation(
         summary = "Make visit",
+        tags = {"Visit"},
         responses = {
+            @ApiResponse(
+                description = "The visit",
+                content = @Content(schema = @Schema(implementation = Visit.class))
+            ),
             @ApiResponse(responseCode = "400", description = "Date cannot be in the future"),
             @ApiResponse(responseCode = "400", description = "Pet not found"),
             @ApiResponse(responseCode = "400", description = "Vet not found"),
+            @ApiResponse(responseCode = "422", description = "Date does not exist"),
+            @ApiResponse(responseCode = "422", description = "Treatment does not exist"),
             @ApiResponse(responseCode = "500", description = "Visit could not be created")
         }
     )
     @PUT
     @Path("/pets/{petId}/vets/{vetId}")
-    public void makeVisit(
+    public Visit makeVisit(
         final @PathParam("petId") int petId,
         final @PathParam("vetId") int vetId,
-        final MakeVisitRequest createPetRequest
+        final @Valid MakeVisitRequest createPetRequest
     ) {
         // validation
         petManager.getPet(petId)
             .orElseThrow(() -> new BadRequestException("Pet does not exist"));
         vetManager.getVet(vetId)
             .orElseThrow(() -> new BadRequestException("Pet does not exist"));
-        if (createPetRequest.getDate().isAfter(now())) {
-            throw new BadRequestException("Date cannot be in the future");
-        }
 
-        visitManager.makeVisit(mapToMakeVisit(petId, vetId, createPetRequest));
+        return visitManager
+            .makeVisit(mapToMakeVisit(petId, vetId, createPetRequest))
+            .orElseThrow(() -> new InternalServerErrorException("Visit could not be created"));
     }
 
     @Operation(
         summary = "Gets visits for a pet",
+        tags = {"Visit"},
         responses = {
             @ApiResponse(
                 description = "Visits for a pet",

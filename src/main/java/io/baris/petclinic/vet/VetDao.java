@@ -1,83 +1,34 @@
 package io.baris.petclinic.vet;
 
-import io.baris.petclinic.vet.model.CreateVet;
 import io.baris.petclinic.vet.model.Vet;
-import io.baris.petclinic.vet.model.UpdateVet;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Manages vet in the database
  */
-@Slf4j
-@RequiredArgsConstructor
-public class VetDao {
+public interface VetDao {
 
-    private final Jdbi jdbi;
+    @SqlQuery("SELECT * FROM vet WHERE id = ?")
+    @RegisterBeanMapper(Vet.class)
+    Vet getVet(int id);
 
-    public Optional<Vet> getVet(final int id) {
-        return getVetByField("id", id);
-    }
+    @SqlQuery("SELECT * FROM vet WHERE name = ?")
+    @RegisterBeanMapper(Vet.class)
+    Vet getVet(String name);
 
-    public Optional<Vet> getVet(final String name) {
-        return getVetByField("name", name);
-    }
+    @SqlQuery("SELECT * FROM vet ORDER BY name")
+    @RegisterBeanMapper(Vet.class)
+    List<Vet> getAllVets();
 
-    public List<Vet> getAllVets() {
-        var vets = jdbi.withHandle(handle ->
-            handle.createQuery("SELECT * FROM vet ORDER BY name")
-                .mapToBean(Vet.class)
-                .list()
-        );
-        log.debug("Retrieved all vets as {}", vets);
+    @SqlUpdate("INSERT INTO vet (name) VALUES (?) returning *")
+    @GetGeneratedKeys
+    int createVet(String name);
 
-        return vets;
-    }
-
-    public Optional<Vet> createVet(
-        final CreateVet createVet
-    ) {
-        var name = createVet.getName();
-        jdbi.withHandle(handle ->
-            handle.execute("insert into vet (name) values (?);", name)
-        );
-        var vet = getVet(name);
-        log.info("Created vet as {}", vet);
-        return vet;
-    }
-
-    public Optional<Vet> updateVet(
-        final UpdateVet updateVet
-    ) {
-        var name = updateVet.getName();
-        jdbi.withHandle(handle ->
-            handle.execute("update vet set name = ? where id = ?;",
-                name, updateVet.getId())
-        );
-        var vet = getVet(name);
-        log.info("Updated vet as {}", vet);
-        return vet;
-    }
-
-    private <T> Optional<Vet> getVetByField(
-        final String name,
-        final T value
-    ) {
-        var sql = "SELECT * FROM vet WHERE {field} = :{field} "
-            .replaceAll("\\{field\\}", name);
-        var vet = jdbi.withHandle(handle ->
-            handle.createQuery(sql)
-                .bind(name, value)
-                .mapToBean(Vet.class)
-                .stream()
-                .findFirst()
-        );
-        log.info("Vet {} retrieved", vet);
-
-        return vet;
-    }
+    @SqlUpdate("UPDATE vet SET name = ? WHERE id = ?")
+    int updateVet(String name, int id);
 }

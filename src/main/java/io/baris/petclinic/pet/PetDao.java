@@ -1,94 +1,35 @@
 package io.baris.petclinic.pet;
 
-import io.baris.petclinic.pet.model.CreatePet;
 import io.baris.petclinic.pet.model.Pet;
-import io.baris.petclinic.pet.model.UpdatePet;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jdbi.v3.core.Jdbi;
+import io.baris.petclinic.pet.model.Species;
+import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
- * Manages pet in the database
+ * Manages pets in the database
  */
-@Slf4j
-@RequiredArgsConstructor
-public class PetDao {
+public interface PetDao {
 
-    private final Jdbi jdbi;
+    @SqlQuery("SELECT * FROM pet WHERE id = ?")
+    @RegisterBeanMapper(Pet.class)
+    Pet getPet(int id);
 
-    public Optional<Pet> getPet(final int id) {
-        return getPetByField("id", id);
-    }
+    @SqlQuery("SELECT * FROM pet WHERE name = ?")
+    @RegisterBeanMapper(Pet.class)
+    Pet getPet(String name);
 
-    public Optional<Pet> getPet(final String name) {
-        return getPetByField("name", name);
-    }
+    @SqlQuery("SELECT * FROM pet ORDER BY name")
+    @RegisterBeanMapper(Pet.class)
+    List<Pet> getAllPets();
 
-    public List<Pet> getAllPets() {
-        var pets = jdbi.withHandle(handle ->
-            handle.createQuery("SELECT * FROM pet ORDER BY name")
-                .mapToBean(Pet.class)
-                .list()
-        );
-        log.debug("Retrieved all pets as{}", pets);
+    @SqlUpdate("INSERT INTO pet (name, age, species) VALUES (?, ?, ?) returning *")
+    @GetGeneratedKeys
+    int createPet(String name, int age, Species species);
 
-        return pets;
-    }
-
-    public Optional<Pet> createPet(
-        final CreatePet createPet
-    ) {
-        var name = createPet.getName();
-        jdbi.withHandle(handle ->
-            handle.execute("""
-                    insert into pet 
-                    (name, age, species) 
-                    values (?, ?, ?);
-                    """,
-                name, createPet.getAge(), createPet.getSpecies()
-            ));
-        var pet = getPet(name);
-        log.info("Created pet as {}", pet);
-        return pet;
-    }
-
-    public Optional<Pet> updatePet(
-        final UpdatePet updatePet
-    ) {
-        var name = updatePet.getName();
-        jdbi.withHandle(handle ->
-            handle.execute("""
-                    update pet set 
-                    name = ?,  
-                    age = ?,  
-                    species = ?
-                    where id = ?;
-                    """,
-                name, updatePet.getAge(), updatePet.getSpecies(), updatePet.getId()
-            ));
-        var pet = getPet(name);
-        log.info("Updated pet as {}", pet);
-        return pet;
-    }
-
-    private <T> Optional<Pet> getPetByField(
-        final String name,
-        final T value
-    ) {
-        var sql = "SELECT * FROM pet WHERE {field} = :{field} "
-            .replaceAll("\\{field\\}", name);
-        var pet = jdbi.withHandle(handle ->
-            handle.createQuery(sql)
-                .bind(name, value)
-                .mapToBean(Pet.class)
-                .stream()
-                .findFirst()
-        );
-        log.info("Pet {} retrieved", pet);
-
-        return pet;
-    }
+    @SqlUpdate("UPDATE pet SET name = ?,  age = ?,  species = ? WHERE id = ?")
+    int updatePet(String name, int age, Species species, int id);
 }

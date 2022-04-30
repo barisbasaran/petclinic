@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -32,6 +33,7 @@ public class VetResource {
 
     @Operation(
         summary = "Gets a vet by ID",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",
@@ -43,7 +45,9 @@ public class VetResource {
     )
     @GET
     @Path("/{id}")
-    public Vet getVet(final @PathParam("id") int id) {
+    public Vet getVet(
+        final @PathParam("id") int id
+    ) {
         return vetManager
             .getVet(id)
             .orElseThrow(() -> new NotFoundException("Vet not found"));
@@ -51,6 +55,7 @@ public class VetResource {
 
     @Operation(
         summary = "Gets all vets",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "All vets",
@@ -65,6 +70,7 @@ public class VetResource {
 
     @Operation(
         summary = "Create vet",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",
@@ -75,7 +81,7 @@ public class VetResource {
     )
     @PUT
     public Vet createVet(
-        final CreateVetRequest createVetRequest
+        final @Valid CreateVetRequest createVetRequest
     ) {
         return vetManager
             .createVet(mapToCreateVet(createVetRequest))
@@ -84,6 +90,7 @@ public class VetResource {
 
     @Operation(
         summary = "Updates vet",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",
@@ -96,7 +103,7 @@ public class VetResource {
     @POST
     public Vet updateVet(
         final @PathParam("id") int id,
-        final UpdateVetRequest updateVetRequest
+        final @Valid UpdateVetRequest updateVetRequest
     ) {
         return vetManager
             .updateVet(mapToUpdateVet(id, updateVetRequest))

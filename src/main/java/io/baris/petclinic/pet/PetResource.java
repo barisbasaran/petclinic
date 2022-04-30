@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -32,6 +33,7 @@ public class PetResource {
 
     @Operation(
         summary = "Gets a pet by ID",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
@@ -43,7 +45,9 @@ public class PetResource {
     )
     @GET
     @Path("/{id}")
-    public Pet getPet(final @PathParam("id") int id) {
+    public Pet getPet(
+        final @PathParam("id") int id
+    ) {
         return petManager
             .getPet(id)
             .orElseThrow(() -> new NotFoundException("Pet not found"));
@@ -51,6 +55,7 @@ public class PetResource {
 
     @Operation(
         summary = "Gets all pets",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "All pets",
@@ -65,6 +70,7 @@ public class PetResource {
 
     @Operation(
         summary = "Create pet",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
@@ -75,7 +81,7 @@ public class PetResource {
     )
     @PUT
     public Pet createPet(
-        final CreatePetRequest createPetRequest
+        final @Valid CreatePetRequest createPetRequest
     ) {
         return petManager
             .createPet(mapToCreatePet(createPetRequest))
@@ -84,6 +90,7 @@ public class PetResource {
 
     @Operation(
         summary = "Updates pet",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
@@ -96,7 +103,7 @@ public class PetResource {
     @POST
     public Pet updatePet(
         final @PathParam("id") int id,
-        final UpdatePetRequest updatePetRequest
+        final @Valid UpdatePetRequest updatePetRequest
     ) {
         return petManager
             .updatePet(mapToUpdatePet(id, updatePetRequest))
