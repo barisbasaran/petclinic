@@ -10,4 +10,4 @@ How to start the Pet Clinic
 Health Check
 ---
 
-To see your applications health enter url `http://localhost:8081/healthcheck`
+To see your application's health enter url `http://localhost:8081/healthcheck`
