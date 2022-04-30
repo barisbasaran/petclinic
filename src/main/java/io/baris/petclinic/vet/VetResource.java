@@ -33,6 +33,7 @@ public class VetResource {
 
     @Operation(
         summary = "Gets a vet by ID",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",
@@ -54,6 +55,7 @@ public class VetResource {
 
     @Operation(
         summary = "Gets all vets",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "All vets",
@@ -68,6 +70,7 @@ public class VetResource {
 
     @Operation(
         summary = "Create vet",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",
@@ -87,6 +90,7 @@ public class VetResource {
 
     @Operation(
         summary = "Updates vet",
+        tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",

@@ -35,6 +35,7 @@ public class VisitResource {
 
     @Operation(
         summary = "Make visit",
+        tags = {"Visit"},
         responses = {
             @ApiResponse(responseCode = "400", description = "Date cannot be in the future"),
             @ApiResponse(responseCode = "400", description = "Pet not found"),
@@ -62,6 +63,7 @@ public class VisitResource {
 
     @Operation(
         summary = "Gets visits for a pet",
+        tags = {"Visit"},
         responses = {
             @ApiResponse(
                 description = "Visits for a pet",

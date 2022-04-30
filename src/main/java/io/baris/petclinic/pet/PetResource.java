@@ -33,6 +33,7 @@ public class PetResource {
 
     @Operation(
         summary = "Gets a pet by ID",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
@@ -54,6 +55,7 @@ public class PetResource {
 
     @Operation(
         summary = "Gets all pets",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "All pets",
@@ -68,6 +70,7 @@ public class PetResource {
 
     @Operation(
         summary = "Create pet",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
@@ -87,6 +90,7 @@ public class PetResource {
 
     @Operation(
         summary = "Updates pet",
+        tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
