@@ -14,8 +14,7 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import java.time.Instant;
 
-import static javax.ws.rs.core.Response.Status.NO_CONTENT;
-import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -72,6 +71,82 @@ public class VisitIntegrationTest {
         assertThat(visitInDb.getDate()).isEqualTo(makeVisitRequest.getDate());
         assertThat(visitInDb.getTreatment()).isEqualTo("flu");
         assertThat(visitInDb.getVetId()).isEqualTo(magnus.get().getId());
+    }
+
+    @Test
+    public void makeVisit_PetDoesNotExist() {
+        // act
+        var makeVisitRequest = MakeVisitRequest.builder()
+            .date(Instant.parse("2018-11-30T18:35:24.00Z"))
+            .treatment("flu")
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("visits")
+            .path("pets")
+            .path("1")
+            .path("vets")
+            .path("1")
+            .request()
+            .put(Entity.json(makeVisitRequest));
+
+        // assert
+        assertThat(response.getStatusInfo()).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
+    public void makeVisit_VetDoesNotExist() {
+        // arrange
+        postgre.addPet("Sofi", 2, Species.CAT);
+        var sofi = postgre.getPet("Sofi");
+        assertThat(sofi).isPresent();
+
+        // act
+        var makeVisitRequest = MakeVisitRequest.builder()
+            .date(Instant.parse("2018-11-30T18:35:24.00Z"))
+            .treatment("flu")
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("visits")
+            .path("pets")
+            .path(String.valueOf(sofi.get().getId()))
+            .path("vets")
+            .path("1")
+            .request()
+            .put(Entity.json(makeVisitRequest));
+
+        // assert
+        assertThat(response.getStatusInfo()).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
+    public void makeVisit_DateMissing() {
+        // arrange
+        postgre.addVet("Magnus");
+        var magnus = postgre.getVet("Magnus");
+        assertThat(magnus).isPresent();
+
+        postgre.addPet("Sofi", 2, Species.CAT);
+        var sofi = postgre.getPet("Sofi");
+        assertThat(sofi).isPresent();
+
+        // act
+        var makeVisitRequest = MakeVisitRequest.builder()
+            .treatment("flu")
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("visits")
+            .path("pets")
+            .path(String.valueOf(sofi.get().getId()))
+            .path("vets")
+            .path(String.valueOf(magnus.get().getId()))
+            .request()
+            .put(Entity.json(makeVisitRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 
     @Test

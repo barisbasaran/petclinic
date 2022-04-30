@@ -12,12 +12,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 import static io.baris.petclinic.visit.VisitMapper.mapToMakeVisit;
-import static java.time.Instant.now;
 
 /**
  * Visit resource to serve visit endpoints
@@ -47,16 +47,13 @@ public class VisitResource {
     public void makeVisit(
         final @PathParam("petId") int petId,
         final @PathParam("vetId") int vetId,
-        final MakeVisitRequest createPetRequest
+        final @Valid MakeVisitRequest createPetRequest
     ) {
         // validation
         petManager.getPet(petId)
             .orElseThrow(() -> new BadRequestException("Pet does not exist"));
         vetManager.getVet(vetId)
             .orElseThrow(() -> new BadRequestException("Pet does not exist"));
-        if (createPetRequest.getDate().isAfter(now())) {
-            throw new BadRequestException("Date cannot be in the future");
-        }
 
         visitManager.makeVisit(mapToMakeVisit(petId, vetId, createPetRequest));
     }
