@@ -5,7 +5,6 @@ import io.baris.petclinic.pet.PetResource;
 import io.baris.petclinic.system.PetclinicHealthCheck;
 import io.baris.petclinic.vet.VetManager;
 import io.baris.petclinic.vet.VetResource;
-import io.baris.petclinic.visit.VisitDao;
 import io.baris.petclinic.visit.VisitManager;
 import io.baris.petclinic.visit.VisitResource;
 import io.dropwizard.Application;
@@ -61,9 +60,7 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
 
         var vetManager = new VetManager(jdbi);
         var petManager = new PetManager(jdbi);
-
-        var visitDao = new VisitDao(jdbi);
-        var visitManager = new VisitManager(visitDao);
+        var visitManager = new VisitManager(jdbi);
 
         // register resources
         environment.jersey().register(new VetResource(vetManager));

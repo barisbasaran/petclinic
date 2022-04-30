@@ -50,7 +50,7 @@ public class VisitIntegrationTest {
             .date(Instant.parse("2018-11-30T18:35:24.00Z"))
             .treatment("flu")
             .build();
-        var response = app.client()
+        var visit = app.client()
             .target(getTargetUrl())
             .path("visits")
             .path("pets")
@@ -58,10 +58,15 @@ public class VisitIntegrationTest {
             .path("vets")
             .path(String.valueOf(magnus.get().getId()))
             .request()
-            .put(Entity.json(makeVisitRequest));
+            .put(Entity.json(makeVisitRequest), Visit.class);
 
         // assert
-        assertThat(response.getStatusInfo()).isEqualTo(NO_CONTENT);
+        assertThat(visit).isNotNull();
+        assertThat(visit.getId()).isGreaterThan(0);
+        assertThat(visit.getDate()).isEqualTo(makeVisitRequest.getDate());
+        assertThat(visit.getTreatment()).isEqualTo("flu");
+        assertThat(visit.getPetId()).isEqualTo(sofi.get().getId());
+        assertThat(visit.getVetId()).isEqualTo(magnus.get().getId());
 
         // verify DB changes
         var visitsInDb = postgre.getPetVisits(sofi.get().getId());

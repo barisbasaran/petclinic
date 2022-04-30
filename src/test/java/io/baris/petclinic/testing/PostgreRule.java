@@ -7,7 +7,7 @@ import io.baris.petclinic.pet.model.Species;
 import io.baris.petclinic.vet.VetManager;
 import io.baris.petclinic.vet.model.CreateVet;
 import io.baris.petclinic.vet.model.Vet;
-import io.baris.petclinic.visit.VisitDao;
+import io.baris.petclinic.visit.VisitManager;
 import io.baris.petclinic.visit.model.MakeVisit;
 import io.baris.petclinic.visit.model.Visit;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class PostgreRule extends ExternalResource {
 
     private VetManager vetManager;
     private PetManager petManager;
-    private VisitDao visitDao;
+    private VisitManager visitManager;
 
     public PostgreRule(final String configPath) {
         this.container = PostgreUtils.getPostgreSQLContainer(configPath);
@@ -47,7 +47,7 @@ public class PostgreRule extends ExternalResource {
 
         this.vetManager = new VetManager(jdbi);
         this.petManager = new PetManager(jdbi);
-        this.visitDao = new VisitDao(jdbi);
+        this.visitManager = new VisitManager(jdbi);
 
         initDbSchema();
     }
@@ -88,7 +88,7 @@ public class PostgreRule extends ExternalResource {
     }
 
     public List<Visit> getPetVisits(final int petId) {
-        return visitDao.getPetVisits(petId);
+        return visitManager.getPetVisits(petId);
     }
 
     public void addPetVisit(
@@ -97,7 +97,7 @@ public class PostgreRule extends ExternalResource {
         final Instant date,
         final String treatment
     ) {
-        visitDao.makeVisit(
+        visitManager.makeVisit(
             MakeVisit.builder()
                 .petId(pet.getId())
                 .vetId(vet.getId())

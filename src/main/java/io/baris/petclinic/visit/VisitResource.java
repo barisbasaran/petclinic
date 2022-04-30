@@ -37,6 +37,10 @@ public class VisitResource {
         summary = "Make visit",
         tags = {"Visit"},
         responses = {
+            @ApiResponse(
+                description = "The visit",
+                content = @Content(schema = @Schema(implementation = Visit.class))
+            ),
             @ApiResponse(responseCode = "400", description = "Date cannot be in the future"),
             @ApiResponse(responseCode = "400", description = "Pet not found"),
             @ApiResponse(responseCode = "400", description = "Vet not found"),
@@ -47,7 +51,7 @@ public class VisitResource {
     )
     @PUT
     @Path("/pets/{petId}/vets/{vetId}")
-    public void makeVisit(
+    public Visit makeVisit(
         final @PathParam("petId") int petId,
         final @PathParam("vetId") int vetId,
         final @Valid MakeVisitRequest createPetRequest
@@ -58,7 +62,9 @@ public class VisitResource {
         vetManager.getVet(vetId)
             .orElseThrow(() -> new BadRequestException("Pet does not exist"));
 
-        visitManager.makeVisit(mapToMakeVisit(petId, vetId, createPetRequest));
+        return visitManager
+            .makeVisit(mapToMakeVisit(petId, vetId, createPetRequest))
+            .orElseThrow(() -> new InternalServerErrorException("Visit could not be created"));
     }
 
     @Operation(
