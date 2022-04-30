@@ -3,7 +3,6 @@ package io.baris.petclinic;
 import io.baris.petclinic.pet.PetManager;
 import io.baris.petclinic.pet.PetResource;
 import io.baris.petclinic.system.PetclinicHealthCheck;
-import io.baris.petclinic.vet.VetDao;
 import io.baris.petclinic.vet.VetManager;
 import io.baris.petclinic.vet.VetResource;
 import io.baris.petclinic.visit.VisitDao;
@@ -60,9 +59,7 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
             .build(environment, configuration.getDatabase(), "mydb");
         jdbi.installPlugin(new SqlObjectPlugin());
 
-        var vetDao = new VetDao(jdbi);
-        var vetManager = new VetManager(vetDao);
-
+        var vetManager = new VetManager(jdbi);
         var petManager = new PetManager(jdbi);
 
         var visitDao = new VisitDao(jdbi);
