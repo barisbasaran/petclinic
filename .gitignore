@@ -1,0 +1,38 @@
+# Package Files
+*.jar
+*.war
+*.ear
+
+# IntelliJ project files
+*.iml
+*.ipr
+*.iws
+.idea
+
+# Eclipse project files
+.classpath
+.project
+.settings
+
+# Build outputs
+*.class
+target
+dependency-reduced-pom.xml
+
+# OS files
+.DS_Store
+
+# VI
+*.swp
+
+.aws.config
+tags
+*.retry
+
+.exec
+application/local.yml
+
+# terraform
+.terraform
+terraform.tfstate.d
+*.plan
