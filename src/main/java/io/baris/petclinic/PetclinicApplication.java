@@ -1,6 +1,5 @@
 package io.baris.petclinic;
 
-import io.baris.petclinic.pet.PetDao;
 import io.baris.petclinic.pet.PetManager;
 import io.baris.petclinic.pet.PetResource;
 import io.baris.petclinic.system.PetclinicHealthCheck;
@@ -16,6 +15,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import javax.servlet.DispatcherType;
 
@@ -58,12 +58,12 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
     ) {
         var jdbi = new JdbiFactory()
             .build(environment, configuration.getDatabase(), "mydb");
+        jdbi.installPlugin(new SqlObjectPlugin());
 
         var vetDao = new VetDao(jdbi);
         var vetManager = new VetManager(vetDao);
 
-        var petDao = new PetDao(jdbi);
-        var petManager = new PetManager(petDao);
+        var petManager = new PetManager(jdbi);
 
         var visitDao = new VisitDao(jdbi);
         var visitManager = new VisitManager(visitDao);

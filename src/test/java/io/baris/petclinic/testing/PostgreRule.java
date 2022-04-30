@@ -1,6 +1,6 @@
 package io.baris.petclinic.testing;
 
-import io.baris.petclinic.pet.PetDao;
+import io.baris.petclinic.pet.PetManager;
 import io.baris.petclinic.pet.model.CreatePet;
 import io.baris.petclinic.pet.model.Pet;
 import io.baris.petclinic.pet.model.Species;
@@ -12,6 +12,7 @@ import io.baris.petclinic.visit.model.MakeVisit;
 import io.baris.petclinic.visit.model.Visit;
 import lombok.Getter;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.junit.rules.ExternalResource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -31,7 +32,7 @@ public class PostgreRule extends ExternalResource {
     private Jdbi jdbi;
 
     private VetDao vetDao;
-    private PetDao petDao;
+    private PetManager petManager;
     private VisitDao visitDao;
 
     public PostgreRule(final String configPath) {
@@ -42,8 +43,10 @@ public class PostgreRule extends ExternalResource {
     @Override
     protected void before() {
         this.jdbi = Jdbi.create(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+        this.jdbi.installPlugin(new SqlObjectPlugin());
+
         this.vetDao = new VetDao(jdbi);
-        this.petDao = new PetDao(jdbi);
+        this.petManager = new PetManager(jdbi);
         this.visitDao = new VisitDao(jdbi);
 
         initDbSchema();
@@ -67,7 +70,7 @@ public class PostgreRule extends ExternalResource {
     }
 
     public Optional<Pet> getPet(final String name) {
-        return petDao.getPet(name);
+        return petManager.getPet(name);
     }
 
     public void addPet(
@@ -75,7 +78,7 @@ public class PostgreRule extends ExternalResource {
         final int age,
         final Species species
     ) {
-        petDao.createPet(
+        petManager.createPet(
             CreatePet.builder()
                 .name(name)
                 .age(age)
