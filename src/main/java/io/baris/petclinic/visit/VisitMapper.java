@@ -1,10 +1,7 @@
 package io.baris.petclinic.visit;
 
-import io.baris.petclinic.pet.PetManager;
-import io.baris.petclinic.vet.VetManager;
 import io.baris.petclinic.visit.model.MakeVisit;
 import io.baris.petclinic.visit.model.MakeVisitRequest;
-import io.baris.petclinic.visit.model.Visit;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -12,9 +9,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class VisitMapper {
-
-    private final PetManager petManager;
-    private final VetManager vetManager;
 
     public static MakeVisit mapToMakeVisit(
         final int petId,
@@ -26,19 +20,6 @@ public class VisitMapper {
             .vetId(vetId)
             .date(makeVisitRequest.getDate())
             .treatment(makeVisitRequest.getTreatment())
-            .build();
-    }
-
-    public Visit mapToVisit(
-        final MakeVisit makeVisit
-    ) {
-        var pet = petManager.getPet(makeVisit.getPetId());
-        var vet = vetManager.getVet(makeVisit.getVetId());
-        return Visit.builder()
-            .pet(pet.get())
-            .vet(vet.get())
-            .date(makeVisit.getDate())
-            .treatment(makeVisit.getTreatment())
             .build();
     }
 }

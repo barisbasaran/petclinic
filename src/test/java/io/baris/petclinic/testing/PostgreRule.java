@@ -9,6 +9,7 @@ import io.baris.petclinic.vet.model.CreateVet;
 import io.baris.petclinic.vet.model.Vet;
 import io.baris.petclinic.visit.VisitDao;
 import io.baris.petclinic.visit.model.MakeVisit;
+import io.baris.petclinic.visit.model.Visit;
 import lombok.Getter;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.rules.ExternalResource;
@@ -83,7 +84,7 @@ public class PostgreRule extends ExternalResource {
         );
     }
 
-    public List<MakeVisit> getPetVisits(final int petId) {
+    public List<Visit> getPetVisits(final int petId) {
         return visitDao.getPetVisits(petId);
     }
 

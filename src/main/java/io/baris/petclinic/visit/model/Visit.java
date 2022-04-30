@@ -1,7 +1,5 @@
 package io.baris.petclinic.visit.model;
 
-import io.baris.petclinic.pet.model.Pet;
-import io.baris.petclinic.vet.model.Vet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +17,9 @@ import java.time.Instant;
 @AllArgsConstructor
 public class Visit {
 
-    private Pet pet;
-    private Vet vet;
+    private int id;
+    private int petId;
+    private int vetId;
     private Instant date;
     private String treatment;
 }

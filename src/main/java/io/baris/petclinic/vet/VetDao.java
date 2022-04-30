@@ -33,7 +33,7 @@ public class VetDao {
                 .mapToBean(Vet.class)
                 .list()
         );
-        log.info("All vets {} retrieved", vets);
+        log.debug("Retrieved all vets as {}", vets);
 
         return vets;
     }
@@ -45,7 +45,9 @@ public class VetDao {
         jdbi.withHandle(handle ->
             handle.execute("insert into vet (name) values (?);", name)
         );
-        return getVet(name);
+        var vet = getVet(name);
+        log.info("Created vet as {}", vet);
+        return vet;
     }
 
     public Optional<Vet> updateVet(
@@ -56,7 +58,9 @@ public class VetDao {
             handle.execute("update vet set name = ? where id = ?;",
                 name, updateVet.getId())
         );
-        return getVet(name);
+        var vet = getVet(name);
+        log.info("Updated vet as {}", vet);
+        return vet;
     }
 
     private <T> Optional<Vet> getVetByField(

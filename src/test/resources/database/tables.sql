@@ -18,6 +18,7 @@ ALTER TABLE pet
 
 CREATE TABLE visit
 (
+    id        SERIAL,
     pet_id    INTEGER   NOT NULL,
     vet_id    INTEGER   NOT NULL,
     date      TIMESTAMP NOT NULL,

@@ -8,13 +8,11 @@ import java.time.Instant;
  * Model for making a visit
  */
 @Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 public class MakeVisit {
 
-    private int petId;
-    private int vetId;
-    private Instant date;
-    private String treatment;
+    int petId;
+    int vetId;
+    Instant date;
+    String treatment;
 }

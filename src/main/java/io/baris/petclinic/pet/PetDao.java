@@ -33,7 +33,7 @@ public class PetDao {
                 .mapToBean(Pet.class)
                 .list()
         );
-        log.info("All pets {} retrieved", pets);
+        log.debug("Retrieved all pets as{}", pets);
 
         return pets;
     }
@@ -50,7 +50,9 @@ public class PetDao {
                     """,
                 name, createPet.getAge(), createPet.getSpecies()
             ));
-        return getPet(name);
+        var pet = getPet(name);
+        log.info("Created pet as {}", pet);
+        return pet;
     }
 
     public Optional<Pet> updatePet(
@@ -67,7 +69,9 @@ public class PetDao {
                     """,
                 name, updatePet.getAge(), updatePet.getSpecies(), updatePet.getId()
             ));
-        return getPet(name);
+        var pet = getPet(name);
+        log.info("Updated pet as {}", pet);
+        return pet;
     }
 
     private <T> Optional<Pet> getPetByField(

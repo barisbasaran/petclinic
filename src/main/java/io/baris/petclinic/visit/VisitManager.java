@@ -5,7 +5,6 @@ import io.baris.petclinic.visit.model.Visit;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Manages the visits
@@ -14,21 +13,12 @@ import java.util.Optional;
 public class VisitManager {
 
     private final VisitDao visitDao;
-    private final VisitMapper visitMapper;
 
-    public Optional<Visit> makeVisit(
-        final MakeVisit makeVisit
-    ) {
-        return visitDao
-            .makeVisit(makeVisit)
-            .map(visitMapper::mapToVisit);
+    public void makeVisit(final MakeVisit makeVisit) {
+        visitDao.makeVisit(makeVisit);
     }
 
     public List<Visit> getPetVisits(final int petId) {
-        return visitDao
-            .getPetVisits(petId)
-            .stream()
-            .map(visitMapper::mapToVisit)
-            .toList();
+        return visitDao.getPetVisits(petId);
     }
 }

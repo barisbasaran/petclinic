@@ -12,9 +12,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
 import java.time.Instant;
 
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -50,7 +51,7 @@ public class VisitIntegrationTest {
             .date(Instant.parse("2018-11-30T18:35:24.00Z"))
             .treatment("flu")
             .build();
-        var visit = app.client()
+        var response = app.client()
             .target(getTargetUrl())
             .path("visits")
             .path("pets")
@@ -58,10 +59,10 @@ public class VisitIntegrationTest {
             .path("vets")
             .path(String.valueOf(magnus.get().getId()))
             .request()
-            .put(Entity.json(makeVisitRequest), Visit.class);
+            .put(Entity.json(makeVisitRequest));
 
         // assert
-        assertThat(visit).isNotNull();
+        assertThat(response.getStatusInfo()).isEqualTo(NO_CONTENT);
 
         // verify DB changes
         var visitsInDb = postgre.getPetVisits(sofi.get().getId());
@@ -103,20 +104,22 @@ public class VisitIntegrationTest {
             .get();
 
         // assert
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatusInfo()).isEqualTo(OK);
 
         var visits = response.readEntity(Visit[].class);
         assertThat(visits).hasSize(2);
 
         var visit1 = visits[0];
-        assertThat(visit1.getPet()).isEqualTo(sofi.get());
-        assertThat(visit1.getVet()).isEqualTo(magnus.get());
+        assertThat(visit1.getId()).isGreaterThan(0);
+        assertThat(visit1.getPetId()).isEqualTo(sofi.get().getId());
+        assertThat(visit1.getVetId()).isEqualTo(magnus.get().getId());
         assertThat(visit1.getDate()).isEqualTo(dateFirstVisit);
         assertThat(visit1.getTreatment()).isEqualTo("flu");
 
         var visit2 = visits[1];
-        assertThat(visit2.getPet()).isEqualTo(sofi.get());
-        assertThat(visit2.getVet()).isEqualTo(erica.get());
+        assertThat(visit2.getId()).isGreaterThan(0);
+        assertThat(visit2.getPetId()).isEqualTo(sofi.get().getId());
+        assertThat(visit2.getVetId()).isEqualTo(erica.get().getId());
         assertThat(visit2.getDate()).isEqualTo(dateSecondVisit);
         assertThat(visit2.getTreatment()).isEqualTo("parasites");
     }

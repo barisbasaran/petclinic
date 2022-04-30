@@ -11,10 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
 
-import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -48,7 +46,7 @@ public class VetIntegrationTest {
             .get();
 
         // assert
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatusInfo()).isEqualTo(OK);
         var vets = response.readEntity(Vet[].class);
 
         assertThat(vets).hasSize(2);
@@ -72,7 +70,7 @@ public class VetIntegrationTest {
             .get();
 
         // assert
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatusInfo()).isEqualTo(OK);
         var vet = response.readEntity(Vet.class);
 
         assertThat(vet.getName()).isEqualTo("Magnus");

@@ -1,12 +1,12 @@
 package io.baris.petclinic.visit;
 
 import io.baris.petclinic.visit.model.MakeVisit;
+import io.baris.petclinic.visit.model.Visit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Manages visit in the database
@@ -17,7 +17,7 @@ public class VisitDao {
 
     private final Jdbi jdbi;
 
-    public Optional<MakeVisit> makeVisit(
+    public void makeVisit(
         final MakeVisit makeVisit
     ) {
         jdbi.withHandle(handle ->
@@ -31,10 +31,9 @@ public class VisitDao {
                 makeVisit.getDate(),
                 makeVisit.getTreatment()
             ));
-        return Optional.of(makeVisit);
     }
 
-    public List<MakeVisit> getPetVisits(final int petId) {
+    public List<Visit> getPetVisits(final int petId) {
         var visits = jdbi.withHandle(handle ->
             handle.createQuery("""
                     SELECT * FROM visit WHERE 
@@ -42,10 +41,10 @@ public class VisitDao {
                     ORDER BY date ASC
                     """)
                 .bind("pet_id", petId)
-                .mapToBean(MakeVisit.class)
+                .mapToBean(Visit.class)
                 .list()
         );
-        log.info("Retrieved visits for pet {} as {}", petId, visits);
+        log.debug("Retrieved visits for pet {} as {}", petId, visits);
         return visits;
     }
 }

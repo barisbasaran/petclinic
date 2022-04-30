@@ -1,7 +1,6 @@
 package io.baris.petclinic.visit;
 
 import io.baris.petclinic.pet.PetManager;
-import io.baris.petclinic.pet.model.Pet;
 import io.baris.petclinic.vet.VetManager;
 import io.baris.petclinic.visit.model.MakeVisitRequest;
 import io.baris.petclinic.visit.model.Visit;
@@ -37,10 +36,6 @@ public class VisitResource {
     @Operation(
         summary = "Make visit",
         responses = {
-            @ApiResponse(
-                description = "The visit",
-                content = @Content(schema = @Schema(implementation = Pet.class))
-            ),
             @ApiResponse(responseCode = "400", description = "Date cannot be in the future"),
             @ApiResponse(responseCode = "400", description = "Pet not found"),
             @ApiResponse(responseCode = "400", description = "Vet not found"),
@@ -49,7 +44,7 @@ public class VisitResource {
     )
     @PUT
     @Path("/pets/{petId}/vets/{vetId}")
-    public Visit makeVisit(
+    public void makeVisit(
         final @PathParam("petId") int petId,
         final @PathParam("vetId") int vetId,
         final MakeVisitRequest createPetRequest
@@ -63,9 +58,7 @@ public class VisitResource {
             throw new BadRequestException("Date cannot be in the future");
         }
 
-        return visitManager
-            .makeVisit(mapToMakeVisit(petId, vetId, createPetRequest))
-            .orElseThrow(() -> new InternalServerErrorException("Visit could not be created"));
+        visitManager.makeVisit(mapToMakeVisit(petId, vetId, createPetRequest));
     }
 
     @Operation(

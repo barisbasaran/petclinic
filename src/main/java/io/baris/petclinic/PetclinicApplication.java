@@ -3,13 +3,12 @@ package io.baris.petclinic;
 import io.baris.petclinic.pet.PetDao;
 import io.baris.petclinic.pet.PetManager;
 import io.baris.petclinic.pet.PetResource;
-import io.baris.petclinic.vet.VetDao;
 import io.baris.petclinic.system.PetclinicHealthCheck;
-import io.baris.petclinic.vet.VetResource;
+import io.baris.petclinic.vet.VetDao;
 import io.baris.petclinic.vet.VetManager;
+import io.baris.petclinic.vet.VetResource;
 import io.baris.petclinic.visit.VisitDao;
 import io.baris.petclinic.visit.VisitManager;
-import io.baris.petclinic.visit.VisitMapper;
 import io.baris.petclinic.visit.VisitResource;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi3.JdbiFactory;
@@ -59,8 +58,7 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
         var petManager = new PetManager(petDao);
 
         var visitDao = new VisitDao(jdbi);
-        var visitMapper = new VisitMapper(petManager, vetManager);
-        var visitManager = new VisitManager(visitDao, visitMapper);
+        var visitManager = new VisitManager(visitDao);
 
         // register resources
         environment.jersey().register(new VetResource(vetManager));
