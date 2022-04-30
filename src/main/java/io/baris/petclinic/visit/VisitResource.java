@@ -39,6 +39,8 @@ public class VisitResource {
             @ApiResponse(responseCode = "400", description = "Date cannot be in the future"),
             @ApiResponse(responseCode = "400", description = "Pet not found"),
             @ApiResponse(responseCode = "400", description = "Vet not found"),
+            @ApiResponse(responseCode = "422", description = "Date does not exist"),
+            @ApiResponse(responseCode = "422", description = "Treatment does not exist"),
             @ApiResponse(responseCode = "500", description = "Visit could not be created")
         }
     )
