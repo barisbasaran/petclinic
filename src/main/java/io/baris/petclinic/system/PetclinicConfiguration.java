@@ -1,4 +1,4 @@
-package io.baris.petclinic;
+package io.baris.petclinic.system;
 
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;

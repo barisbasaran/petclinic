@@ -2,6 +2,7 @@ package io.baris.petclinic;
 
 import io.baris.petclinic.pet.PetManager;
 import io.baris.petclinic.pet.PetResource;
+import io.baris.petclinic.system.PetclinicConfiguration;
 import io.baris.petclinic.system.PetclinicHealthCheck;
 import io.baris.petclinic.vet.VetManager;
 import io.baris.petclinic.vet.VetResource;
