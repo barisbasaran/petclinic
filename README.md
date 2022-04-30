@@ -7,7 +7,7 @@ How to start the Pet Clinic
 1. Start application with `java -jar target/petclinic-1.0-SNAPSHOT.jar server config.yml`
 1. To check that your application is running enter url `http://localhost:8080`
 
-****Health Check
+Health Check
 ---
 
 To see your applications health enter url `http://localhost:8081/healthcheck`
