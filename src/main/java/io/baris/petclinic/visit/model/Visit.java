@@ -19,7 +19,6 @@ import java.time.Instant;
 @AllArgsConstructor
 public class Visit {
 
-    private int id;
     private Pet pet;
     private Vet vet;
     private Instant date;
