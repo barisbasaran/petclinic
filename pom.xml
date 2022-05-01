@@ -16,16 +16,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <dropwizard.version>2.0.23</dropwizard.version>
         <mainClass>io.baris.petclinic.PetclinicApplication</mainClass>
         <java.version>18</java.version>
 
+        <dropwizard.version>2.0.29</dropwizard.version>
         <lombok.version>1.18.24</lombok.version>
         <postgresql.version>42.3.4</postgresql.version>
 
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.22.0</assertj.version>
-        <mockito.version>3.11.2</mockito.version>
+        <mockito.version>4.5.1</mockito.version>
         <testcontainers.version>1.17.1</testcontainers.version>
         <swagger-jaxrs2.version>2.2.0</swagger-jaxrs2.version>
     </properties>
@@ -55,10 +55,6 @@
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-jdbi3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-metrics-graphite</artifactId>
         </dependency>
 
         <!-- Jackson -->

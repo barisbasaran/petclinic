@@ -26,10 +26,7 @@ public class VetIntegrationTest {
     public static PostgreRule postgre = new PostgreRule(TEST_CONFIG);
 
     @ClassRule(order = 1)
-    public static AppBootstrapRule app = new AppBootstrapRule(
-        TEST_CONFIG,
-        postgre.getContainer().getJdbcUrl()
-    );
+    public static AppBootstrapRule app = new AppBootstrapRule(TEST_CONFIG, postgre.getDatabaseUrl());
 
     @Rule
     public DbCleanupRule dbCleanupRule = new DbCleanupRule(postgre.getJdbi());

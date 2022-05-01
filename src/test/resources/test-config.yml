@@ -4,7 +4,9 @@ database:
   password: sa
   url: jdbc:postgresql://local.docker:5432/mydb
 
-databaseName: mydb
+databaseExtra:
+  name: mydb
+  dockerImage: postgres
 
 # use the simple server factory if you only want to run on a single port
 #server:

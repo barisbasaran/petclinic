@@ -57,7 +57,7 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
         final Environment environment
     ) {
         var jdbi = new JdbiFactory()
-            .build(environment, configuration.getDatabase(), "mydb");
+            .build(environment, configuration.getDatabase(), configuration.getDatabaseExtra().getName());
         jdbi.installPlugin(new SqlObjectPlugin());
 
         // initialize DB schema

@@ -19,9 +19,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+import static io.baris.petclinic.testing.TestUtils.loadConfig;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -29,7 +29,6 @@ import static java.util.stream.Collectors.toSet;
  */
 public class PostgreRule extends ExternalResource {
 
-    @Getter
     private final PostgreSQLContainer container;
 
     @Getter
@@ -40,7 +39,7 @@ public class PostgreRule extends ExternalResource {
     private VisitManager visitManager;
 
     public PostgreRule(final String configPath) {
-        this.container = getPostgreSQLContainer(configPath);
+        this.container = loadPostgreContainer(configPath);
         this.container.start();
     }
 
@@ -57,6 +56,10 @@ public class PostgreRule extends ExternalResource {
     @Override
     protected void after() {
         container.stop();
+    }
+
+    public String getDatabaseUrl() {
+        return container.getJdbcUrl();
     }
 
     public Optional<Vet> getVet(final String name) {
@@ -114,12 +117,14 @@ public class PostgreRule extends ExternalResource {
         );
     }
 
-    public static PostgreSQLContainer getPostgreSQLContainer(final String configPath) {
-        var config = TestUtils.loadConfig(configPath);
-        var databaseConfig = (Map<String, String>) config.get("database");
-        return new PostgreSQLContainer("postgres")
-            .withUsername(databaseConfig.get("user"))
-            .withPassword(databaseConfig.get("password"))
-            .withDatabaseName((String) config.get("databaseName"));
+    private PostgreSQLContainer loadPostgreContainer(final String configPath) {
+        var configuration = loadConfig(configPath);
+        var database = configuration.getDatabase();
+        var databaseExtra = configuration.getDatabaseExtra();
+
+        return new PostgreSQLContainer(databaseExtra.getDockerImage())
+            .withUsername(database.getUser())
+            .withPassword(database.getPassword())
+            .withDatabaseName(databaseExtra.getName());
     }
 }

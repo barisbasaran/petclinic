@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 import static io.baris.petclinic.system.PetClinicUtils.readFileToString;
 
+/**
+ * Utilities for Postgre database
+ */
 public class PostgreUtils {
 
     public static void applyDbFile(final Jdbi jdbi, final String path) {
