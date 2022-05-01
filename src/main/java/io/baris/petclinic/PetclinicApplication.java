@@ -18,7 +18,7 @@ import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import javax.servlet.DispatcherType;
 
-import static io.baris.petclinic.system.PostgreUtils.applyDbFile;
+import static io.baris.petclinic.system.PostgreUtils.applySqlScript;
 import static java.util.EnumSet.allOf;
 import static org.eclipse.jetty.servlets.CrossOriginFilter.*;
 
@@ -61,7 +61,7 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
         jdbi.installPlugin(new SqlObjectPlugin());
 
         // initialize DB schema
-        applyDbFile(jdbi, "database/tables.sql");
+        applySqlScript(jdbi, "database/tables.sql");
 
         var vetManager = new VetManager(jdbi);
         var petManager = new PetManager(jdbi);

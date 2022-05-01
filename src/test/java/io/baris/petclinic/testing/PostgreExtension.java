@@ -13,7 +13,9 @@ import io.baris.petclinic.visit.model.Visit;
 import lombok.Getter;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.time.Instant;
@@ -27,7 +29,7 @@ import static java.util.stream.Collectors.toSet;
 /**
  * Junit rule to start PostgreSQL Docker container
  */
-public class PostgreRule extends ExternalResource {
+public class PostgreExtension implements BeforeAllCallback, AfterAllCallback {
 
     private final PostgreSQLContainer container;
 
@@ -38,24 +40,24 @@ public class PostgreRule extends ExternalResource {
     private PetManager petManager;
     private VisitManager visitManager;
 
-    public PostgreRule(final String configPath) {
-        this.container = loadPostgreContainer(configPath);
+    public PostgreExtension(final String configPath) {
+        this.container = loadPostgreDockerContainer(configPath);
         this.container.start();
     }
 
     @Override
-    protected void before() {
+    public void afterAll(ExtensionContext extensionContext) throws Exception {
+        container.stop();
+    }
+
+    @Override
+    public void beforeAll(ExtensionContext extensionContext) throws Exception {
         this.jdbi = Jdbi.create(container.getJdbcUrl(), container.getUsername(), container.getPassword());
         this.jdbi.installPlugin(new SqlObjectPlugin());
 
         this.vetManager = new VetManager(jdbi);
         this.petManager = new PetManager(jdbi);
         this.visitManager = new VisitManager(jdbi);
-    }
-
-    @Override
-    protected void after() {
-        container.stop();
     }
 
     public String getDatabaseUrl() {
@@ -117,7 +119,9 @@ public class PostgreRule extends ExternalResource {
         );
     }
 
-    private PostgreSQLContainer loadPostgreContainer(final String configPath) {
+    private PostgreSQLContainer loadPostgreDockerContainer(
+        final String configPath
+    ) {
         var configuration = loadConfig(configPath);
         var database = configuration.getDatabase();
         var databaseExtra = configuration.getDatabaseExtra();

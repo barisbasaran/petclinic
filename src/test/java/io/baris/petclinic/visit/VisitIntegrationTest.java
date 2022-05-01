@@ -1,15 +1,15 @@
 package io.baris.petclinic.visit;
 
 import io.baris.petclinic.pet.model.Species;
-import io.baris.petclinic.testing.AppBootstrapRule;
-import io.baris.petclinic.testing.DbCleanupRule;
-import io.baris.petclinic.testing.PostgreRule;
+import io.baris.petclinic.testing.AppBootstrapExtention;
+import io.baris.petclinic.testing.DbCleanupExtension;
+import io.baris.petclinic.testing.PostgreExtension;
 import io.baris.petclinic.visit.model.MakeVisitRequest;
 import io.baris.petclinic.visit.model.Visit;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.ws.rs.client.Entity;
 import java.time.Instant;
@@ -23,15 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 public class VisitIntegrationTest {
 
+    @RegisterExtension
+    @Order(0)
+    public static PostgreExtension postgre = new PostgreExtension(TEST_CONFIG);
 
-    @ClassRule(order = 0)
-    public static PostgreRule postgre = new PostgreRule(TEST_CONFIG);
+    @RegisterExtension
+    @Order(1)
+    public static AppBootstrapExtention app = new AppBootstrapExtention(TEST_CONFIG, postgre.getDatabaseUrl());
 
-    @ClassRule(order = 1)
-    public static AppBootstrapRule app = new AppBootstrapRule(TEST_CONFIG, postgre.getDatabaseUrl());
-
-    @Rule
-    public DbCleanupRule dbCleanupRule = new DbCleanupRule(postgre.getJdbi());
+    @RegisterExtension
+    public DbCleanupExtension dbCleanup = new DbCleanupExtension(postgre.getJdbi());
 
     @Test
     public void makeVisit_Success() {

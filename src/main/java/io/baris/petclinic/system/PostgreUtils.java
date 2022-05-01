@@ -11,7 +11,7 @@ import static io.baris.petclinic.system.PetClinicUtils.readFileToString;
  */
 public class PostgreUtils {
 
-    public static void applyDbFile(final Jdbi jdbi, final String path) {
+    public static void applySqlScript(final Jdbi jdbi, final String path) {
         String tables = readFileToString(path);
         jdbi.withHandle(handle -> {
             Arrays.stream(tables.split(";")).forEach(handle::execute);

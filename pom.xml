@@ -23,7 +23,7 @@
         <lombok.version>1.18.24</lombok.version>
         <postgresql.version>42.3.4</postgresql.version>
 
-        <junit.version>4.13.2</junit.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <assertj.version>3.22.0</assertj.version>
         <mockito.version>4.5.1</mockito.version>
         <testcontainers.version>1.17.1</testcontainers.version>
@@ -92,9 +92,9 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
