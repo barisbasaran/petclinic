@@ -6,6 +6,14 @@ CREATE TABLE vet
 ALTER TABLE vet
     ADD UNIQUE (name);
 
+CREATE TABLE vet_specialty
+(
+    vet_id    INTEGER,
+    specialty TEXT,
+    PRIMARY KEY (vet_id, specialty)
+);
+
+
 CREATE TABLE pet
 (
     id      SERIAL,

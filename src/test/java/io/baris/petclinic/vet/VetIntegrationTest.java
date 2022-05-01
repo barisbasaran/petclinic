@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
+import java.util.Set;
 
 import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,8 +36,8 @@ public class VetIntegrationTest {
     @Test
     public void getAllVets() {
         // arrange
-        postgre.addVet("Magnus");
-        postgre.addVet("Erica");
+        postgre.addVet("Magnus", "radiology", "dentistry");
+        postgre.addVet("Erica", "surgery");
 
         // act
         var response = app.client()
@@ -51,13 +52,15 @@ public class VetIntegrationTest {
 
         assertThat(vets).hasSize(2);
         assertThat(vets[0].getName()).isEqualTo("Erica");
+        assertThat(vets[0].getSpecialties()).isEqualTo(Set.of("surgery"));
         assertThat(vets[1].getName()).isEqualTo("Magnus");
+        assertThat(vets[1].getSpecialties()).isEqualTo(Set.of("radiology", "dentistry"));
     }
 
     @Test
     public void getVet_VetFound() {
         // arrange
-        postgre.addVet("Magnus");
+        postgre.addVet("Magnus", "radiology", "dentistry");
         var magnus = postgre.getVet("Magnus");
         assertThat(magnus).isPresent();
 
@@ -74,6 +77,7 @@ public class VetIntegrationTest {
         var vet = response.readEntity(Vet.class);
 
         assertThat(vet.getName()).isEqualTo("Magnus");
+        assertThat(vet.getSpecialties()).isEqualTo(Set.of("radiology", "dentistry"));
     }
 
     @Test
@@ -95,6 +99,7 @@ public class VetIntegrationTest {
         // act
         var createVetRequest = CreateVetRequest.builder()
             .name("Magnus")
+            .specialties(Set.of("radiology", "dentistry"))
             .build();
         var vet = app.client()
             .target(getTargetUrl())
@@ -106,11 +111,15 @@ public class VetIntegrationTest {
         assertThat(vet).isNotNull();
         assertThat(vet.getId()).isNotNull();
         assertThat(vet.getName()).isEqualTo("Magnus");
+        assertThat(vet.getSpecialties())
+            .isEqualTo(Set.of("radiology", "dentistry"));
 
         // verify DB changes
         var vetInDb = postgre.getVet("Magnus");
         assertThat(vetInDb).isPresent();
         assertThat(vetInDb.get().getName()).isEqualTo("Magnus");
+        assertThat(vetInDb.get().getSpecialties())
+            .isEqualTo(Set.of("radiology", "dentistry"));
     }
 
     @Test
@@ -136,20 +145,22 @@ public class VetIntegrationTest {
     public void updateVet_Success() {
         // arrange
         var oldName = "Magnus";
-        postgre.addVet(oldName);
+        postgre.addVet(oldName, "radiology", "dentistry");
 
         var vetBefore = postgre.getVet(oldName);
         assertThat(vetBefore).isPresent();
+        var vetId = vetBefore.get().getId();
 
         // act
         var newName = "Magnus Karl";
         var createVetRequest = CreateVetRequest.builder()
             .name(newName)
+            .specialties(Set.of("surgery"))
             .build();
         var vet = app.client()
             .target(getTargetUrl())
             .path("vets")
-            .path(String.valueOf(vetBefore.get().getId()))
+            .path(String.valueOf(vetId))
             .request()
             .post(Entity.json(createVetRequest), Vet.class);
 
@@ -157,10 +168,13 @@ public class VetIntegrationTest {
         assertThat(vet).isNotNull();
         assertThat(vet.getId()).isNotNull();
         assertThat(vet.getName()).isEqualTo(newName);
+        assertThat(vet.getSpecialties()).isEqualTo(Set.of("surgery"));
 
         // verify DB changes
-        assertThat(postgre.getVet(newName)).isPresent();
-        assertThat(postgre.getVet(oldName)).isEmpty();
+        var vetInDb = postgre.getVet(vetId);
+        assertThat(vetInDb).isPresent();
+        assertThat(vetInDb.get().getName()).isEqualTo(newName);
+        assertThat(vetInDb.get().getSpecialties()).isEqualTo(Set.of("surgery"));
     }
 
     @Test

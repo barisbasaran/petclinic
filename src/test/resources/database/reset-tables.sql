@@ -1,3 +1,4 @@
 TRUNCATE TABLE vet;
 TRUNCATE TABLE pet;
 TRUNCATE TABLE visit;
+TRUNCATE TABLE vet_specialty;

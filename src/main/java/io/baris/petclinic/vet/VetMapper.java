@@ -17,6 +17,7 @@ public class VetMapper {
         return UpdateVet.builder()
             .id(id)
             .name(updateVetRequest.getName())
+            .specialties(updateVetRequest.getSpecialties())
             .build();
     }
 
@@ -25,6 +26,7 @@ public class VetMapper {
     ) {
         return CreateVet.builder()
             .name(createVetRequest.getName())
+            .specialties(createVetRequest.getSpecialties())
             .build();
     }
 }

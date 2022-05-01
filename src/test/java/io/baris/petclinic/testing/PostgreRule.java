@@ -17,8 +17,11 @@ import org.junit.rules.ExternalResource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Junit rule to start PostgreSQL Docker container
@@ -61,10 +64,15 @@ public class PostgreRule extends ExternalResource {
         return vetManager.getVet(name);
     }
 
-    public void addVet(final String name) {
+    public Optional<Vet> getVet(final int vetId) {
+        return vetManager.getVet(vetId);
+    }
+
+    public void addVet(final String name, String... specialities) {
         vetManager.createVet(
             CreateVet.builder()
                 .name(name)
+                .specialties(Arrays.stream(specialities).collect(toSet()))
                 .build()
         );
     }
