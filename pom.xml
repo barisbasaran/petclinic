@@ -10,7 +10,6 @@
     <artifactId>petclinic</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-
     <name>petclinic</name>
 
     <properties>
@@ -19,15 +18,17 @@
         <mainClass>io.baris.petclinic.PetclinicApplication</mainClass>
         <java.version>18</java.version>
 
+        <!-- Frameworks -->
         <dropwizard.version>2.0.29</dropwizard.version>
         <lombok.version>1.18.24</lombok.version>
         <postgresql.version>42.3.4</postgresql.version>
+        <swagger.version>2.2.0</swagger.version>
 
+        <!-- Test -->
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <assertj.version>3.22.0</assertj.version>
         <mockito.version>4.5.1</mockito.version>
         <testcontainers.version>1.17.1</testcontainers.version>
-        <swagger-jaxrs2.version>2.2.0</swagger-jaxrs2.version>
     </properties>
 
     <dependencyManagement>
@@ -57,22 +58,6 @@
             <artifactId>dropwizard-jdbi3</artifactId>
         </dependency>
 
-        <!-- Jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
-
-        <!-- Validation -->
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-
         <!-- Other -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -87,7 +72,7 @@
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-jaxrs2</artifactId>
-            <version>${swagger-jaxrs2.version}</version>
+            <version>${swagger.version}</version>
         </dependency>
 
         <!-- Test -->
@@ -155,6 +140,11 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

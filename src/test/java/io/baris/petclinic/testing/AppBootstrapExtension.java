@@ -8,9 +8,9 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 /**
  * Junit rule to start the application
  */
-public class AppBootstrapExtention extends DropwizardAppExtension {
+public class AppBootstrapExtension extends DropwizardAppExtension {
 
-    public AppBootstrapExtention(
+    public AppBootstrapExtension(
         final String configPath,
         final String databaseUrl
     ) {

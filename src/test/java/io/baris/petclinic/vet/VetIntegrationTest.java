@@ -1,7 +1,7 @@
 package io.baris.petclinic.vet;
 
-import io.baris.petclinic.testing.AppBootstrapExtention;
-import io.baris.petclinic.testing.DbCleanupExtension;
+import io.baris.petclinic.testing.AppBootstrapExtension;
+import io.baris.petclinic.testing.DbResetExtension;
 import io.baris.petclinic.testing.PostgreExtension;
 import io.baris.petclinic.vet.model.CreateVetRequest;
 import io.baris.petclinic.vet.model.UpdateVetRequest;
@@ -28,10 +28,10 @@ public class VetIntegrationTest {
 
     @RegisterExtension
     @Order(1)
-    public static AppBootstrapExtention app = new AppBootstrapExtention(TEST_CONFIG, postgre.getDatabaseUrl());
+    public static AppBootstrapExtension app = new AppBootstrapExtension(TEST_CONFIG, postgre.getDatabaseUrl());
 
     @RegisterExtension
-    public DbCleanupExtension dbCleanup = new DbCleanupExtension(postgre.getJdbi());
+    public DbResetExtension dbReset = new DbResetExtension(postgre.getJdbi());
 
     @Test
     public void getAllVets_Success() {

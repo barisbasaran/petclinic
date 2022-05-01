@@ -4,8 +4,8 @@ import io.baris.petclinic.pet.model.CreatePetRequest;
 import io.baris.petclinic.pet.model.Pet;
 import io.baris.petclinic.pet.model.Species;
 import io.baris.petclinic.pet.model.UpdatePetRequest;
-import io.baris.petclinic.testing.AppBootstrapExtention;
-import io.baris.petclinic.testing.DbCleanupExtension;
+import io.baris.petclinic.testing.AppBootstrapExtension;
+import io.baris.petclinic.testing.DbResetExtension;
 import io.baris.petclinic.testing.PostgreExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Order;
@@ -30,10 +30,10 @@ public class PetIntegrationTest {
 
     @RegisterExtension
     @Order(1)
-    public static AppBootstrapExtention app = new AppBootstrapExtention(TEST_CONFIG, postgre.getDatabaseUrl());
+    public static AppBootstrapExtension app = new AppBootstrapExtension(TEST_CONFIG, postgre.getDatabaseUrl());
 
     @RegisterExtension
-    public DbCleanupExtension dbCleanup = new DbCleanupExtension(postgre.getJdbi());
+    public DbResetExtension dbReset = new DbResetExtension(postgre.getJdbi());
 
     @Test
     public void getAllPets_Success() {

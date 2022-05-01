@@ -1,8 +1,8 @@
 package io.baris.petclinic.visit;
 
 import io.baris.petclinic.pet.model.Species;
-import io.baris.petclinic.testing.AppBootstrapExtention;
-import io.baris.petclinic.testing.DbCleanupExtension;
+import io.baris.petclinic.testing.AppBootstrapExtension;
+import io.baris.petclinic.testing.DbResetExtension;
 import io.baris.petclinic.testing.PostgreExtension;
 import io.baris.petclinic.visit.model.MakeVisitRequest;
 import io.baris.petclinic.visit.model.Visit;
@@ -29,10 +29,10 @@ public class VisitIntegrationTest {
 
     @RegisterExtension
     @Order(1)
-    public static AppBootstrapExtention app = new AppBootstrapExtention(TEST_CONFIG, postgre.getDatabaseUrl());
+    public static AppBootstrapExtension app = new AppBootstrapExtension(TEST_CONFIG, postgre.getDatabaseUrl());
 
     @RegisterExtension
-    public DbCleanupExtension dbCleanup = new DbCleanupExtension(postgre.getJdbi());
+    public DbResetExtension dbReset = new DbResetExtension(postgre.getJdbi());
 
     @Test
     public void makeVisit_Success() {

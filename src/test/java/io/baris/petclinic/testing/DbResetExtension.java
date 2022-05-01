@@ -11,12 +11,12 @@ import static io.baris.petclinic.system.PostgreUtils.applySqlScript;
  * Junit rule to truncate DB tables to clean them for a fresh start for each test case
  */
 @RequiredArgsConstructor
-public class DbCleanupExtension implements BeforeEachCallback {
+public class DbResetExtension implements BeforeEachCallback {
 
     private final Jdbi jdbi;
 
     @Override
-    public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        applySqlScript(jdbi, "database/reset-tables.sql");
+    public void beforeEach(ExtensionContext extensionContext) {
+        applySqlScript(jdbi, "database/db-reset.sql");
     }
 }

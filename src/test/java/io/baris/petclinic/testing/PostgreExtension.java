@@ -46,13 +46,17 @@ public class PostgreExtension implements BeforeAllCallback, AfterAllCallback {
     }
 
     @Override
-    public void afterAll(ExtensionContext extensionContext) throws Exception {
+    public void afterAll(ExtensionContext extensionContext) {
         container.stop();
     }
 
     @Override
-    public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        this.jdbi = Jdbi.create(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+    public void beforeAll(ExtensionContext extensionContext) {
+        this.jdbi = Jdbi.create(
+            container.getJdbcUrl(),
+            container.getUsername(),
+            container.getPassword()
+        );
         this.jdbi.installPlugin(new SqlObjectPlugin());
 
         this.vetManager = new VetManager(jdbi);

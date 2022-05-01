@@ -22,17 +22,8 @@ dependency-reduced-pom.xml
 # OS files
 .DS_Store
 
-# VI
+# Other
 *.swp
-
-.aws.config
-tags
-*.retry
-
+.aws
+.config
 .exec
-application/local.yml
-
-# terraform
-.terraform
-terraform.tfstate.d
-*.plan
