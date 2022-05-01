@@ -10,6 +10,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -19,22 +20,22 @@ public interface VetDao {
 
     @SqlQuery("SELECT * FROM vet WHERE id = ?")
     @RegisterBeanMapper(Vet.class)
-    Vet getVet(int id);
+    Vet getVetBasic(int vetId);
 
     @SqlQuery("SELECT * FROM vet WHERE name = ?")
     @RegisterBeanMapper(Vet.class)
-    Vet getVet(String name);
+    Vet getVetBasic(String name);
 
     @SqlQuery("SELECT * FROM vet ORDER BY name")
     @RegisterBeanMapper(Vet.class)
-    List<Vet> getAllVets();
+    List<Vet> getAllVetsBasic();
 
     @SqlUpdate("INSERT INTO vet (name) VALUES (?) returning *")
     @GetGeneratedKeys
-    int createVet(String name);
+    int createVetBasic(String name);
 
     @SqlUpdate("UPDATE vet SET name = ? WHERE id = ?")
-    int updateVet(String name, int id);
+    int updateVetBasic(String name, int id);
 
     @SqlUpdate("INSERT INTO vet_specialty (vet_id, specialty) VALUES (?, ?)")
     int createVetSpecialty(int vetId, String specialty);
@@ -46,25 +47,57 @@ public interface VetDao {
     Set<String> getVetSpecialties(int vetId);
 
     @Transaction
-    default int createVet(final CreateVet createVet) {
-        var vetId = createVet(createVet.getName());
-        var specialties = createVet.getSpecialties();
-        createVetSpecialties(vetId, specialties);
-        return vetId;
+    default Optional<Vet> getVet(final int vetId) {
+        var vet = getVetBasic(vetId);
+        if (vet != null) {
+            vet.setSpecialties(getVetSpecialties(vetId));
+        }
+        return Optional.ofNullable(vet);
     }
 
     @Transaction
-    default void updateVet(final UpdateVet updateVet) {
+    default Optional<Vet> getVet(final String name) {
+        var vet = getVetBasic(name);
+        return vet != null ? getVet(vet.getId()) : Optional.empty();
+    }
+
+    @Transaction
+    default List<Vet> getAllVets() {
+        return getAllVetsBasic()
+            .stream()
+            .map(vet -> getVet(vet.getId()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .toList();
+    }
+
+    @Transaction
+    default Optional<Vet> createVet(final CreateVet createVet) {
+        var vetId = createVetBasic(createVet.getName());
+
+        var specialties = createVet.getSpecialties();
+        createVetSpecialties(vetId, specialties);
+
+        return getVet(vetId);
+    }
+
+    @Transaction
+    default Optional<Vet> updateVet(final UpdateVet updateVet) {
         var vetId = updateVet.getId();
-        updateVet(updateVet.getName(), vetId);
+        updateVetBasic(updateVet.getName(), vetId);
 
         deleteVetSpecialties(vetId);
         createVetSpecialties(vetId, updateVet.getSpecialties());
+
+        return getVet(vetId);
     }
 
     default void createVetSpecialties(int vetId, Set<String> specialties) {
         if (specialties != null) {
-            specialties.forEach(specialty -> createVetSpecialty(vetId, specialty));
+            specialties.forEach(specialty -> {
+                createVetSpecialty(vetId, specialty);
+                if (specialty.equals("a")) throw new RuntimeException("wrong speciality");
+            });
         }
     }
 }
