@@ -94,10 +94,8 @@ public interface VetDao {
 
     default void createVetSpecialties(int vetId, Set<String> specialties) {
         if (specialties != null) {
-            specialties.forEach(specialty -> {
-                createVetSpecialty(vetId, specialty);
-                if (specialty.equals("a")) throw new RuntimeException("wrong speciality");
-            });
+            specialties.forEach(specialty ->
+                createVetSpecialty(vetId, specialty));
         }
     }
 }

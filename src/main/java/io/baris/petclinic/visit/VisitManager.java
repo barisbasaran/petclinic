@@ -17,14 +17,7 @@ public class VisitManager {
     private final Jdbi jdbi;
 
     public Optional<Visit> makeVisit(final MakeVisit makeVisit) {
-        var visitId = jdbi.withExtension(VisitDao.class, dao -> dao.createVisit(
-            makeVisit.getPetId(),
-            makeVisit.getVetId(),
-            makeVisit.getDate(),
-            makeVisit.getTreatment())
-        );
-        var visit = jdbi.withExtension(VisitDao.class, dao -> dao.getVisit(visitId));
-        return Optional.of(visit);
+        return jdbi.withExtension(VisitDao.class, dao -> dao.createVisit(makeVisit));
     }
 
     public List<Visit> getPetVisits(final int petId) {
