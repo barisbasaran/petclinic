@@ -1,4 +1,4 @@
-CREATE TABLE vet
+CREATE TABLE IF NOT EXISTS vet
 (
     id   SERIAL,
     name TEXT NOT NULL
@@ -6,7 +6,7 @@ CREATE TABLE vet
 ALTER TABLE vet
     ADD UNIQUE (name);
 
-CREATE TABLE vet_specialty
+CREATE TABLE IF NOT EXISTS vet_specialty
 (
     vet_id    INTEGER,
     specialty TEXT,
@@ -14,7 +14,7 @@ CREATE TABLE vet_specialty
 );
 
 
-CREATE TABLE pet
+CREATE TABLE IF NOT EXISTS pet
 (
     id      SERIAL,
     name    TEXT    NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE pet
 ALTER TABLE pet
     ADD UNIQUE (name);
 
-CREATE TABLE visit
+CREATE TABLE IF NOT EXISTS visit
 (
     id        SERIAL,
     pet_id    INTEGER   NOT NULL,

@@ -19,6 +19,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
@@ -39,7 +40,7 @@ public class PostgreRule extends ExternalResource {
     private VisitManager visitManager;
 
     public PostgreRule(final String configPath) {
-        this.container = PostgreUtils.getPostgreSQLContainer(configPath);
+        this.container = getPostgreSQLContainer(configPath);
         this.container.start();
     }
 
@@ -51,8 +52,6 @@ public class PostgreRule extends ExternalResource {
         this.vetManager = new VetManager(jdbi);
         this.petManager = new PetManager(jdbi);
         this.visitManager = new VisitManager(jdbi);
-
-        initDbSchema();
     }
 
     @Override
@@ -115,7 +114,12 @@ public class PostgreRule extends ExternalResource {
         );
     }
 
-    private void initDbSchema() {
-        PostgreUtils.applyDbFile(jdbi, "database/tables.sql");
+    public static PostgreSQLContainer getPostgreSQLContainer(final String configPath) {
+        var config = TestUtils.loadConfig(configPath);
+        var databaseConfig = (Map<String, String>) config.get("database");
+        return new PostgreSQLContainer("postgres")
+            .withUsername(databaseConfig.get("user"))
+            .withPassword(databaseConfig.get("password"))
+            .withDatabaseName((String) config.get("databaseName"));
     }
 }

@@ -68,7 +68,7 @@ public class VisitResource {
     }
 
     @Operation(
-        summary = "Gets visits for a pet",
+        summary = "Get visits for a pet",
         tags = {"Visit"},
         responses = {
             @ApiResponse(

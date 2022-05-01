@@ -32,14 +32,13 @@ public class VetResource {
     private final VetManager vetManager;
 
     @Operation(
-        summary = "Gets a vet by ID",
+        summary = "Get vet",
         tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",
                 content = @Content(schema = @Schema(implementation = Vet.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
             @ApiResponse(responseCode = "404", description = "Vet not found")
         }
     )
@@ -54,7 +53,7 @@ public class VetResource {
     }
 
     @Operation(
-        summary = "Gets all vets",
+        summary = "Get all vets",
         tags = {"Vet"},
         responses = {
             @ApiResponse(
@@ -76,6 +75,7 @@ public class VetResource {
                 description = "The vet",
                 content = @Content(schema = @Schema(implementation = Vet.class))
             ),
+            @ApiResponse(responseCode = "422", description = "Invalid input"),
             @ApiResponse(responseCode = "500", description = "Vet could not be created")
         }
     )
@@ -89,13 +89,15 @@ public class VetResource {
     }
 
     @Operation(
-        summary = "Updates vet",
+        summary = "Update vet",
         tags = {"Vet"},
         responses = {
             @ApiResponse(
                 description = "The vet",
                 content = @Content(schema = @Schema(implementation = Vet.class))
             ),
+            @ApiResponse(responseCode = "422", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Vet not found"),
             @ApiResponse(responseCode = "500", description = "Vet could not be updated")
         }
     )

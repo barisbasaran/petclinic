@@ -32,14 +32,13 @@ public class PetResource {
     private final PetManager petManager;
 
     @Operation(
-        summary = "Gets a pet by ID",
+        summary = "Get pet",
         tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
                 content = @Content(schema = @Schema(implementation = Pet.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
             @ApiResponse(responseCode = "404", description = "Pet not found")
         }
     )
@@ -54,7 +53,7 @@ public class PetResource {
     }
 
     @Operation(
-        summary = "Gets all pets",
+        summary = "Get all pets",
         tags = {"Pet"},
         responses = {
             @ApiResponse(
@@ -76,6 +75,7 @@ public class PetResource {
                 description = "The pet",
                 content = @Content(schema = @Schema(implementation = Pet.class))
             ),
+            @ApiResponse(responseCode = "422", description = "Invalid input"),
             @ApiResponse(responseCode = "500", description = "Pet could not be created")
         }
     )
@@ -89,13 +89,15 @@ public class PetResource {
     }
 
     @Operation(
-        summary = "Updates pet",
+        summary = "Update pet",
         tags = {"Pet"},
         responses = {
             @ApiResponse(
                 description = "The pet",
                 content = @Content(schema = @Schema(implementation = Pet.class))
             ),
+            @ApiResponse(responseCode = "422", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Pet not found"),
             @ApiResponse(responseCode = "500", description = "Pet could not be updated")
         }
     )
