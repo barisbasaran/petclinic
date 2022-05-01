@@ -15,14 +15,14 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
+import static io.baris.petclinic.testing.TestUtils.TEST_CONFIG;
+import static io.baris.petclinic.testing.TestUtils.UNPROCESSIBLE_ENTITY;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class PetIntegrationTest {
-
-    public static final String TEST_CONFIG = "test-config.yml";
 
     @ClassRule(order = 0)
     public static PostgreRule postgre = new PostgreRule(TEST_CONFIG);
@@ -37,7 +37,7 @@ public class PetIntegrationTest {
     public DbCleanupRule dbCleanupRule = new DbCleanupRule(postgre.getJdbi());
 
     @Test
-    public void getAllPets() {
+    public void getAllPets_Success() {
         // arrange
         postgre.addPet("Sofi", 2, Species.CAT);
         postgre.addPet("Lucky", 5, Species.DOG);
@@ -67,7 +67,7 @@ public class PetIntegrationTest {
     }
 
     @Test
-    public void getPet_PetFound() {
+    public void getPet_Success() {
         // arrange
         postgre.addPet("Sofi", 2, Species.CAT);
         var pet = postgre.getPet("Sofi");
@@ -91,7 +91,7 @@ public class PetIntegrationTest {
     }
 
     @Test
-    public void getPet_PetNotFound() {
+    public void getPet_FailWhenNotFound() {
         // act
         var response = app.client()
             .target(getTargetUrl())
@@ -141,6 +141,8 @@ public class PetIntegrationTest {
         // act
         var createPetRequest = CreatePetRequest.builder()
             .name("Sofi")
+            .age(4)
+            .species(Species.CAT)
             .build();
         var response = app.client()
             .target(getTargetUrl())
@@ -150,6 +152,60 @@ public class PetIntegrationTest {
 
         // assert
         assertThat(response.getStatusInfo()).isEqualTo(INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void createPet_FailWhenMissingName() {
+        // act
+        var createPetRequest = CreatePetRequest.builder()
+            .age(4)
+            .species(Species.CAT)
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("pets")
+            .request()
+            .put(Entity.json(createPetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
+    }
+
+    @Test
+    public void createPet_FailWhenInvalidAge() {
+        // act
+        var createPetRequest = CreatePetRequest.builder()
+            .name("Sofi")
+            .species(Species.CAT)
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("pets")
+            .request()
+            .put(Entity.json(createPetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
+    }
+
+    @Test
+    public void createPet_FailWhenMissingSpecies() {
+        // act
+        var createPetRequest = CreatePetRequest.builder()
+            .name("Sofi")
+            .age(4)
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("pets")
+            .request()
+            .put(Entity.json(createPetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
     }
 
     @Test
@@ -190,19 +246,77 @@ public class PetIntegrationTest {
     @Test
     public void updatePet_FailWhenNotFound() {
         // act
-        var newName = "Sofi Karl";
-        var createPetRequest = CreatePetRequest.builder()
-            .name(newName)
+        var updatePetRequest = UpdatePetRequest.builder()
+            .name("Sofi")
+            .age(6)
+            .species(Species.CAT)
             .build();
         var response = app.client()
             .target(getTargetUrl())
             .path("pets")
             .path(String.valueOf(1))
             .request()
-            .post(Entity.json(createPetRequest));
+            .post(Entity.json(updatePetRequest));
 
         // assert
         assertThat(response.getStatusInfo()).isEqualTo(NOT_FOUND);
+    }
+
+    @Test
+    public void updatePet_FailWhenMissingName() {
+        // act
+        var updatePetRequest = UpdatePetRequest.builder()
+            .age(6)
+            .species(Species.CAT)
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("pets")
+            .path(String.valueOf(1))
+            .request()
+            .post(Entity.json(updatePetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
+    }
+
+    @Test
+    public void updatePet_FailWhenInvalidAge() {
+        // act
+        var updatePetRequest = UpdatePetRequest.builder()
+            .name("Sofi")
+            .species(Species.CAT)
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("pets")
+            .path(String.valueOf(1))
+            .request()
+            .post(Entity.json(updatePetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
+    }
+
+    @Test
+    public void updatePet_FailWhenMissingSpecies() {
+        // act
+        var updatePetRequest = UpdatePetRequest.builder()
+            .name("Sofi")
+            .age(6)
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("pets")
+            .path(String.valueOf(1))
+            .request()
+            .post(Entity.json(updatePetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
     }
 
     private String getTargetUrl() {

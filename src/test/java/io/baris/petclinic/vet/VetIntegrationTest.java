@@ -4,6 +4,7 @@ import io.baris.petclinic.testing.AppBootstrapRule;
 import io.baris.petclinic.testing.DbCleanupRule;
 import io.baris.petclinic.testing.PostgreRule;
 import io.baris.petclinic.vet.model.CreateVetRequest;
+import io.baris.petclinic.vet.model.UpdateVetRequest;
 import io.baris.petclinic.vet.model.Vet;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
@@ -13,13 +14,13 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import java.util.Set;
 
+import static io.baris.petclinic.testing.TestUtils.TEST_CONFIG;
+import static io.baris.petclinic.testing.TestUtils.UNPROCESSIBLE_ENTITY;
 import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class VetIntegrationTest {
-
-    public static final String TEST_CONFIG = "test-config.yml";
 
     @ClassRule(order = 0)
     public static PostgreRule postgre = new PostgreRule(TEST_CONFIG);
@@ -34,7 +35,7 @@ public class VetIntegrationTest {
     public DbCleanupRule dbCleanupRule = new DbCleanupRule(postgre.getJdbi());
 
     @Test
-    public void getAllVets() {
+    public void getAllVets_Success() {
         // arrange
         postgre.addVet("Magnus", "radiology", "dentistry");
         postgre.addVet("Erica", "surgery");
@@ -58,7 +59,7 @@ public class VetIntegrationTest {
     }
 
     @Test
-    public void getVet_VetFound() {
+    public void getVet_Success() {
         // arrange
         postgre.addVet("Magnus", "radiology", "dentistry");
         var magnus = postgre.getVet("Magnus");
@@ -81,7 +82,7 @@ public class VetIntegrationTest {
     }
 
     @Test
-    public void getVet_VetNotFound() {
+    public void getVet_FailWhenNotFound() {
         // act
         var response = app.client()
             .target(getTargetUrl())
@@ -130,6 +131,7 @@ public class VetIntegrationTest {
         // act
         var createVetRequest = CreateVetRequest.builder()
             .name("Magnus")
+            .specialties(Set.of("surgery"))
             .build();
         var response = app.client()
             .target(getTargetUrl())
@@ -139,6 +141,41 @@ public class VetIntegrationTest {
 
         // assert
         assertThat(response.getStatusInfo()).isEqualTo(INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void createVet_FailWhenMissingName() {
+        // act
+        var createVetRequest = CreateVetRequest.builder()
+            .specialties(Set.of("surgery"))
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("vets")
+            .request()
+            .put(Entity.json(createVetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
+    }
+
+    @Test
+    public void createVet_FailWhenMissingSpecialties() {
+        // act
+        var createVetRequest = CreateVetRequest.builder()
+            .name("Magnus")
+            .specialties(Set.of())
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("vets")
+            .request()
+            .put(Entity.json(createVetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
     }
 
     @Test
@@ -153,7 +190,7 @@ public class VetIntegrationTest {
 
         // act
         var newName = "Magnus Karl";
-        var createVetRequest = CreateVetRequest.builder()
+        var updateVetRequest = UpdateVetRequest.builder()
             .name(newName)
             .specialties(Set.of("surgery"))
             .build();
@@ -162,7 +199,7 @@ public class VetIntegrationTest {
             .path("vets")
             .path(String.valueOf(vetId))
             .request()
-            .post(Entity.json(createVetRequest), Vet.class);
+            .post(Entity.json(updateVetRequest), Vet.class);
 
         // assert
         assertThat(vet).isNotNull();
@@ -180,19 +217,56 @@ public class VetIntegrationTest {
     @Test
     public void updateVet_FailWhenNotFound() {
         // act
-        var newName = "Magnus Karl";
-        var createVetRequest = CreateVetRequest.builder()
-            .name(newName)
+        var updateVetRequest = UpdateVetRequest.builder()
+            .name("Magnus")
+            .specialties(Set.of("surgery"))
             .build();
         var response = app.client()
             .target(getTargetUrl())
             .path("vets")
             .path(String.valueOf(1))
             .request()
-            .post(Entity.json(createVetRequest));
+            .post(Entity.json(updateVetRequest));
 
         // assert
         assertThat(response.getStatusInfo()).isEqualTo(NOT_FOUND);
+    }
+
+    @Test
+    public void updateVet_FailWhenMissingName() {
+        // act
+        var updateVetRequest = UpdateVetRequest.builder()
+            .specialties(Set.of("surgery"))
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("vets")
+            .path(String.valueOf(1))
+            .request()
+            .post(Entity.json(updateVetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
+    }
+
+    @Test
+    public void updateVet_FailWhenMissingSpecialties() {
+        // act
+        var updateVetRequest = UpdateVetRequest.builder()
+            .name("Magnus")
+            .specialties(Set.of())
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("vets")
+            .path(String.valueOf(1))
+            .request()
+            .post(Entity.json(updateVetRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
     }
 
     private String getTargetUrl() {

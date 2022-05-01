@@ -3,6 +3,8 @@ package io.baris.petclinic.vet.model;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -12,6 +14,8 @@ import java.util.Set;
 @Value
 public class CreateVetRequest {
 
+    @NotNull
     String name;
+    @NotEmpty
     Set<String> specialties;
 }

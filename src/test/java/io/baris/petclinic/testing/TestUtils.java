@@ -10,6 +10,9 @@ import java.util.Map;
 
 public class TestUtils {
 
+    public static final String TEST_CONFIG = "test-config.yml";
+    public static final int UNPROCESSIBLE_ENTITY = 422;
+
     public static String readFileToString(final String path) {
         try {
             var tablesPath = ResourceHelpers.resourceFilePath(path);

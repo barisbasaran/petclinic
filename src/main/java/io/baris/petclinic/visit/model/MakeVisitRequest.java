@@ -3,6 +3,7 @@ package io.baris.petclinic.visit.model;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
@@ -15,6 +16,6 @@ public class MakeVisitRequest {
 
     @NotNull
     Instant date;
-    @NotNull
+    @NotEmpty
     String treatment;
 }

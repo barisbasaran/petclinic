@@ -14,13 +14,15 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import java.time.Instant;
 
-import static javax.ws.rs.core.Response.Status.*;
+import static io.baris.petclinic.testing.TestUtils.TEST_CONFIG;
+import static io.baris.petclinic.testing.TestUtils.UNPROCESSIBLE_ENTITY;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class VisitIntegrationTest {
 
-    public static final String TEST_CONFIG = "test-config.yml";
 
     @ClassRule(order = 0)
     public static PostgreRule postgre = new PostgreRule(TEST_CONFIG);
@@ -79,7 +81,7 @@ public class VisitIntegrationTest {
     }
 
     @Test
-    public void makeVisit_PetDoesNotExist() {
+    public void makeVisit_FailWhenPetDoesNotExist() {
         // act
         var makeVisitRequest = MakeVisitRequest.builder()
             .date(Instant.parse("2018-11-30T18:35:24.00Z"))
@@ -100,7 +102,7 @@ public class VisitIntegrationTest {
     }
 
     @Test
-    public void makeVisit_VetDoesNotExist() {
+    public void makeVisit_FailWhenVetDoesNotExist() {
         // arrange
         postgre.addPet("Sofi", 2, Species.CAT);
         var sofi = postgre.getPet("Sofi");
@@ -126,7 +128,7 @@ public class VisitIntegrationTest {
     }
 
     @Test
-    public void makeVisit_DateMissing() {
+    public void makeVisit_FailWhenMissingDate() {
         // arrange
         postgre.addVet("Magnus");
         var magnus = postgre.getVet("Magnus");
@@ -151,7 +153,38 @@ public class VisitIntegrationTest {
             .put(Entity.json(makeVisitRequest));
 
         // assert
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
+    }
+
+    @Test
+    public void makeVisit_FailWhenMissingTreatment() {
+        // arrange
+        postgre.addVet("Magnus");
+        var magnus = postgre.getVet("Magnus");
+        assertThat(magnus).isPresent();
+
+        postgre.addPet("Sofi", 2, Species.CAT);
+        var sofi = postgre.getPet("Sofi");
+        assertThat(sofi).isPresent();
+
+        // act
+        var makeVisitRequest = MakeVisitRequest.builder()
+            .date(Instant.parse("2018-11-30T18:35:24.00Z"))
+            .build();
+        var response = app.client()
+            .target(getTargetUrl())
+            .path("visits")
+            .path("pets")
+            .path(String.valueOf(sofi.get().getId()))
+            .path("vets")
+            .path(String.valueOf(magnus.get().getId()))
+            .request()
+            .put(Entity.json(makeVisitRequest));
+
+        // assert
+        assertThat(response.getStatusInfo().getStatusCode())
+            .isEqualTo(UNPROCESSIBLE_ENTITY);
     }
 
     @Test
