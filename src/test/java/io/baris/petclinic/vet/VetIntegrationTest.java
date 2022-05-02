@@ -24,11 +24,11 @@ public class VetIntegrationTest {
 
     @RegisterExtension
     @Order(0)
-    public static PostgreExtension postgre = new PostgreExtension(TEST_CONFIG);
+    public final static PostgreExtension postgre = new PostgreExtension(TEST_CONFIG);
 
     @RegisterExtension
     @Order(1)
-    public static AppBootstrapExtension app = new AppBootstrapExtension(TEST_CONFIG, postgre.getDatabaseUrl());
+    public final static AppBootstrapExtension app = new AppBootstrapExtension(TEST_CONFIG, postgre.getDatabaseUrl());
 
     @RegisterExtension
     public DbResetExtension dbReset = new DbResetExtension(postgre.getJdbi());

@@ -130,9 +130,13 @@ public class PostgreExtension implements BeforeAllCallback, AfterAllCallback {
         var database = configuration.getDatabase();
         var databaseExtra = configuration.getDatabaseExtra();
 
-        return new PostgreSQLContainer(databaseExtra.getDockerImage())
-            .withUsername(database.getUser())
-            .withPassword(database.getPassword())
-            .withDatabaseName(databaseExtra.getName());
+        try (var postgreSQLContainer =
+                 new PostgreSQLContainer(databaseExtra.getDockerImage())
+                     .withUsername(database.getUser())
+                     .withPassword(database.getPassword())
+                     .withDatabaseName(databaseExtra.getName())
+        ) {
+            return postgreSQLContainer;
+        }
     }
 }

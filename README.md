@@ -25,7 +25,7 @@ It is using the following test frameworks:
 
 Install and start the postgre Docker image
 
-`docker run --name local-postgres -e POSTGRES_PASSWORD=sa -d -p 5432:5432 postgres`
+`docker run --name local-postgres -e POSTGRES_PASSWORD=sa -d -p 5432:5432 postgres:latest`
 
 Connect to the Docker container
 

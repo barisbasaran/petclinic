@@ -1,6 +1,7 @@
 package io.baris.petclinic.testing;
 
 import io.baris.petclinic.PetclinicApplication;
+import io.baris.petclinic.system.PetclinicConfiguration;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
@@ -8,7 +9,7 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 /**
  * Junit rule to start the application
  */
-public class AppBootstrapExtension extends DropwizardAppExtension {
+public class AppBootstrapExtension extends DropwizardAppExtension<PetclinicConfiguration> {
 
     public AppBootstrapExtension(
         final String configPath,
