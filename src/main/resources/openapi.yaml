@@ -7,9 +7,9 @@ openAPI:
     version: '1.0'
     title: Pet Clinic
     description: Pet Clinic
-    termsOfService: http://baris.io/terms/
+    termsOfService: https://baris.io/terms/
     contact:
       email: basaran.baris@gmail.com
     license:
       name: Apache 2.0
-      url: http://www.apache.org/licenses/LICENSE-2.0.html
+      url: https://www.apache.org/licenses/LICENSE-2.0.html

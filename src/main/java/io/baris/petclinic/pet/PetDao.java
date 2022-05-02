@@ -35,7 +35,7 @@ public interface PetDao {
     int createPet(String name, int age, Species species);
 
     @SqlUpdate("UPDATE pet SET name = ?,  age = ?,  species = ? WHERE id = ?")
-    int updatePet(String name, int age, Species species, int id);
+    void updatePet(String name, int age, Species species, int id);
 
     @Transaction
     default Optional<Pet> getPet(final int id) {

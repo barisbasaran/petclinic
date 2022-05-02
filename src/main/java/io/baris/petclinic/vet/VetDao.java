@@ -35,13 +35,13 @@ public interface VetDao {
     int createVetBasic(String name);
 
     @SqlUpdate("UPDATE vet SET name = ? WHERE id = ?")
-    int updateVetBasic(String name, int id);
+    void updateVetBasic(String name, int id);
 
     @SqlUpdate("INSERT INTO vet_specialty (vet_id, specialty) VALUES (?, ?)")
-    int createVetSpecialty(int vetId, String specialty);
+    void createVetSpecialty(int vetId, String specialty);
 
     @SqlUpdate("DELETE FROM vet_specialty WHERE vet_id = ?")
-    int deleteVetSpecialties(int vetId);
+    void deleteVetSpecialties(int vetId);
 
     @SqlQuery("SELECT specialty FROM vet_specialty WHERE vet_id = ?")
     Set<String> getVetSpecialties(int vetId);
