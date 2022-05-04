@@ -17,6 +17,6 @@ public class DbResetExtension implements BeforeEachCallback {
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        applySqlScript(jdbi, "database/db-reset.sql");
+        applySqlScript(jdbi, "classpath:database/db-reset.sql");
     }
 }

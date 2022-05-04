@@ -7,4 +7,5 @@ public class DatabaseExtra {
 
     String name;
     String dockerImage;
+    String initScript;
 }

@@ -1,9 +1,9 @@
 package io.baris.petclinic.testing;
 
 import io.baris.petclinic.PetclinicApplication;
+import io.baris.petclinic.system.PetClinicUtils;
 import io.baris.petclinic.system.PetclinicConfiguration;
 import io.dropwizard.testing.ConfigOverride;
-import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 
 /**
@@ -17,7 +17,7 @@ public class AppBootstrapExtension extends DropwizardAppExtension<PetclinicConfi
     ) {
         super(
             PetclinicApplication.class,
-            ResourceHelpers.resourceFilePath(configPath),
+            PetClinicUtils.resourceFilePath(configPath),
             ConfigOverride.config("database.url", databaseUrl)
         );
     }

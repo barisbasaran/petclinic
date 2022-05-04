@@ -8,7 +8,7 @@ import static io.baris.petclinic.system.PetClinicUtils.readFileToString;
 
 public class TestUtils {
 
-    public static final String TEST_CONFIG = "test-config.yml";
+    public static final String TEST_CONFIG = "classpath:test-config.yml";
     public static final int UNPROCESSIBLE_ENTITY = 422;
 
     public static PetclinicConfiguration loadConfig(final String path) {

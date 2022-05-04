@@ -2,11 +2,12 @@ database:
   driverClass: org.postgresql.Driver
   user: postgres
   password: sa
-  url: jdbc:postgresql://local.docker:5432/mydb
+  url: jdbc:postgresql://localhost:5432/postgres
 
 databaseExtra:
-  name: mydb
+  name: postgres
   dockerImage: postgres
+  initScript: "classpath:database/db-init.sql"
 
 # use the simple server factory if you only want to run on a single port
 server:

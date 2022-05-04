@@ -32,8 +32,14 @@ public class PetClinicUtils {
         }
     }
 
-    private static String resourceFilePath(final String resourceClassPathLocation) {
-        return escapeException(() ->
-            new File(Resources.getResource(resourceClassPathLocation).toURI()).getAbsolutePath());
+    public static String resourceFilePath(final String path) {
+        return escapeException(() -> {
+            if (path.startsWith("classpath:")) {
+                var uri = Resources.getResource(path.substring(10)).toURI();
+                return new File(uri).getAbsolutePath();
+            } else {
+                return new File(path).getAbsolutePath();
+            }
+        });
     }
 }

@@ -61,7 +61,7 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
         jdbi.installPlugin(new SqlObjectPlugin());
 
         // initialize DB schema
-        applySqlScript(jdbi, "database/db-init.sql");
+        applySqlScript(jdbi, configuration.getDatabaseExtra().getInitScript());
 
         var vetManager = new VetManager(jdbi);
         var petManager = new PetManager(jdbi);

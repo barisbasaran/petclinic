@@ -15,37 +15,19 @@ It is built using the following tools:
 
 It is using the following test frameworks:
 * [JUnit](https://junit.org/junit5/)
-* [mockito](https://site.mockito.org/)
+* [Mockito](https://site.mockito.org/)
 * [AssertJ](https://assertj.github.io/doc/)
 * [Testcontainers](https://www.testcontainers.org)
 
 ## Setup
 
-### Install PostgreSQL
+### Install
 
-Install and start the postgre Docker image
+You may install and start the database and the application with Docker.
+ 
+`docker-compose up`
 
-`docker run --name local-postgres -e POSTGRES_PASSWORD=sa -d -p 5432:5432 postgres:latest`
-
-Connect to the Docker container
-
-`docker exec -it local-postgres bash`
-
-Connect to the postgre CLI
-
-`psql -U postgres`
-
-Create a database called **mydb**
-
-`CREATE DATABASE mydb;`
-
-### How to start
-
-1. Run `mvn clean install` to build your application
-1. Start application with `java -jar target/petclinic-1.0-SNAPSHOT.jar server config.yml`
-1. To check that your application is running enter url `http://localhost:8080`
-
-### Health check
+To check that your application is running enter url `http://localhost:8080/vets`
 
 To see your application's health enter url `http://localhost:8081/healthcheck`
 
