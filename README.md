@@ -21,8 +21,6 @@ It is using the following test frameworks:
 
 ## Setup
 
-### Install
-
 You may install and start the database and the application with Docker.
  
 `docker-compose up`
