@@ -1,5 +1,6 @@
 package io.baris.petclinic;
 
+import io.baris.petclinic.home.HomeResource;
 import io.baris.petclinic.pet.PetManager;
 import io.baris.petclinic.pet.PetResource;
 import io.baris.petclinic.system.PetclinicConfiguration;
@@ -71,6 +72,7 @@ public class PetclinicApplication extends Application<PetclinicConfiguration> {
         environment.jersey().register(new VetResource(vetManager));
         environment.jersey().register(new PetResource(petManager));
         environment.jersey().register(new VisitResource(visitManager, petManager, vetManager));
+        environment.jersey().register(new HomeResource());
         environment.jersey().register(new OpenApiResource());
     }
 

@@ -23,8 +23,8 @@ import static io.baris.petclinic.visit.VisitMapper.mapToMakeVisit;
  * Visit resource to serve visit endpoints
  */
 @Path("/visits")
-@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Slf4j
 @RequiredArgsConstructor
 public class VisitResource {

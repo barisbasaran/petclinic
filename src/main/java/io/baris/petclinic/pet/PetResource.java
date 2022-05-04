@@ -23,8 +23,8 @@ import static io.baris.petclinic.pet.PetMapper.mapToUpdatePet;
  * Pet resource to serve pet endpoints
  */
 @Path("/pets")
-@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Slf4j
 @RequiredArgsConstructor
 public class PetResource {

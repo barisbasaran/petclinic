@@ -23,8 +23,8 @@ import static io.baris.petclinic.vet.VetMapper.mapToUpdateVet;
  * Vet resource to serve vet endpoints
  */
 @Path("/vets")
-@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Slf4j
 @RequiredArgsConstructor
 public class VetResource {

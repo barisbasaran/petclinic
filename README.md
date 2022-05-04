@@ -7,6 +7,7 @@ This is an example **RESTful** web service for the **Java Petclinic**.
 It is built using the following tools:
 * [Jakarta RESTful Web Services](https://en.wikipedia.org/wiki/Jakarta_RESTful_Web_Services)
 * [Dropwizard](https://www.dropwizard.io)
+* [Docker](https://www.docker.com)
 * [PostgreSQL](https://www.postgresql.org)
 * [Jdbi](https://jdbi.org)
 * [Lombok](https://projectlombok.org)
@@ -21,13 +22,18 @@ It is using the following test frameworks:
 
 ## Setup
 
-You may install and start the database and the application with Docker.
- 
-`docker-compose up`
+### Build project
 
-To check that your application is running enter url `http://localhost:8080/vets`
+Run `mvn package` to build project with _Maven_.
 
-To see your application's health enter url `http://localhost:8081/healthcheck`
+
+### Start application
+
+Run `docker-compose up` to start application with _Docker_.
+
+To check that your application is running enter url `http://localhost:8080/`
+
+You may see application's health at `http://localhost:8081/healthcheck`
 
 ## Endpoints
 

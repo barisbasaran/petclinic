@@ -9,7 +9,6 @@ databaseExtra:
   dockerImage: postgres
   initScript: "classpath:database/db-init.sql"
 
-# use the simple server factory if you only want to run on a single port
 server:
   type: simple
   applicationContextPath: /
@@ -17,13 +16,9 @@ server:
     type: http
     port: 8080
 
-# Logging settings.
 logging:
-  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
-  # Logger-specific levels.
   loggers:
     io.baris.petclinic: DEBUG
-    # Redirects SQL logs to a separate file
     org.hibernate.SQL:
       level: DEBUG
