@@ -1,10 +1,10 @@
 package io.baris.petclinic.system;
 
-import io.dropwizard.util.Resources;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Utilities for Pet Clinic application
@@ -13,8 +13,42 @@ public class PetClinicUtils {
 
     public static String readFileToString(final String path) {
         return escapeException(() ->
-            Files.readString(Paths.get(resourceFilePath(path)))
+            isClasspathResource(path) ?
+                readClasspathFileToString(extractPath(path)) :
+                Files.readString(Paths.get(path))
         );
+    }
+
+    public static String resourceFilePath(final String path) {
+        return escapeException(() -> {
+            if (isClasspathResource(path)) {
+                return new File(
+                    getContextClassLoader().getResource(extractPath(path)).toURI()
+                ).getAbsolutePath();
+            } else {
+                return new File(path).getAbsolutePath();
+            }
+        });
+    }
+
+    private static String extractPath(String path) {
+        return path.substring(10);
+    }
+
+    private static boolean isClasspathResource(String path) {
+        return path.startsWith("classpath:");
+    }
+
+    public static String readClasspathFileToString(String path) {
+        return escapeException(() -> {
+            try (var inputStream = getContextClassLoader().getResourceAsStream(path)) {
+                return new String(inputStream.readAllBytes(), UTF_8);
+            }
+        });
+    }
+
+    private static ClassLoader getContextClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
     }
 
     public interface ThrowingSupplier<T> {
@@ -30,16 +64,5 @@ public class PetClinicUtils {
             }
             throw new RuntimeException(e);
         }
-    }
-
-    public static String resourceFilePath(final String path) {
-        return escapeException(() -> {
-            if (path.startsWith("classpath:")) {
-                var uri = Resources.getResource(path.substring(10)).toURI();
-                return new File(uri).getAbsolutePath();
-            } else {
-                return new File(path).getAbsolutePath();
-            }
-        });
     }
 }

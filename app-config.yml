@@ -2,12 +2,12 @@ database:
   driverClass: org.postgresql.Driver
   user: postgres
   password: sa
-  url: jdbc:postgresql://db:5432/postgres
+  url: jdbc:postgresql://db:5432/mydb
 
 databaseExtra:
-  name: postgres
+  name: mydb
   dockerImage: postgres
-  initScript: "/app/db-init.sql"
+  initScript: "classpath:database/db-init.sql"
 
 server:
   applicationConnectors:
