@@ -1,12 +1,12 @@
 resourcePackages:
-  - io.baris.petclinic
+  - io.baris.petclinic.dropwizard
 prettyPrint: true
 cacheTTL: 0
 openAPI:
   info:
     version: '1.0'
-    title: Pet Clinic
-    description: Pet Clinic
+    title: Pet Clinic with Dropwizard
+    description: Pet Clinic with Dropwizard
     termsOfService: https://baris.io/terms/
     contact:
       email: basaran.baris@gmail.com

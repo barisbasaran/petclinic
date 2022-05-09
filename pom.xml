@@ -6,16 +6,16 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.baris.petclinic</groupId>
-    <artifactId>petclinic</artifactId>
+    <groupId>io.baris</groupId>
+    <artifactId>petclinic-dropwizard</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>petclinic</name>
+    <name>petclinic-dropwizard</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <mainClass>io.baris.petclinic.PetclinicApplication</mainClass>
+        <mainClass>io.baris.petclinic.dropwizard.PetclinicApplication</mainClass>
         <java.version>18</java.version>
 
         <!-- Frameworks -->

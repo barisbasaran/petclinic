@@ -1,4 +1,4 @@
-# Pet Clinic
+# Pet Clinic with Dropwizard
 
 ## About 
 
