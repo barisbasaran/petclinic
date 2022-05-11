@@ -34,7 +34,7 @@ public class HomeResource {
         }
     )
     @GET
-    public String getVet() {
+    public String homepage() {
         return "Welcome to Pet Clinic";
     }
 }

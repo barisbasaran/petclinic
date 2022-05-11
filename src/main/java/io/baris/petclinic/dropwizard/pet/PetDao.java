@@ -18,23 +18,23 @@ import java.util.Optional;
  */
 public interface PetDao {
 
-    @SqlQuery("SELECT * FROM pet WHERE id = ?")
+    @SqlQuery("SELECT * FROM pets WHERE id = ?")
     @RegisterBeanMapper(Pet.class)
     Pet getPetBasic(int id);
 
-    @SqlQuery("SELECT * FROM pet WHERE name = ?")
+    @SqlQuery("SELECT * FROM pets WHERE name = ?")
     @RegisterBeanMapper(Pet.class)
     Pet getPetBasic(String name);
 
-    @SqlQuery("SELECT * FROM pet ORDER BY name")
+    @SqlQuery("SELECT * FROM pets ORDER BY name")
     @RegisterBeanMapper(Pet.class)
     List<Pet> getAllPets();
 
-    @SqlUpdate("INSERT INTO pet (name, age, species) VALUES (?, ?, ?) returning *")
+    @SqlUpdate("INSERT INTO pets (name, age, species) VALUES (?, ?, ?) returning *")
     @GetGeneratedKeys
     int createPet(String name, int age, Species species);
 
-    @SqlUpdate("UPDATE pet SET name = ?,  age = ?,  species = ? WHERE id = ?")
+    @SqlUpdate("UPDATE pets SET name = ?,  age = ?,  species = ? WHERE id = ?")
     void updatePet(String name, int age, Species species, int id);
 
     @Transaction

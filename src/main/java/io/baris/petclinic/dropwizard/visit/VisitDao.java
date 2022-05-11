@@ -17,15 +17,15 @@ import java.util.Optional;
  */
 public interface VisitDao {
 
-    @SqlQuery("SELECT * FROM visit WHERE id = ?")
+    @SqlQuery("SELECT * FROM visits WHERE id = ?")
     @RegisterBeanMapper(Visit.class)
     Visit getVisit(int id);
 
-    @SqlQuery("SELECT * FROM visit WHERE pet_id = ?")
+    @SqlQuery("SELECT * FROM visits WHERE pet_id = ?")
     @RegisterBeanMapper(Visit.class)
     List<Visit> getPetVisits(int petId);
 
-    @SqlUpdate("INSERT INTO visit (pet_id, vet_id, date, treatment) VALUES (?, ?, ?, ?) returning *")
+    @SqlUpdate("INSERT INTO visits (pet_id, vet_id, date, treatment) VALUES (?, ?, ?, ?) returning *")
     @GetGeneratedKeys
     int createVisit(int petId, int vetId, Instant date, String treatment);
 

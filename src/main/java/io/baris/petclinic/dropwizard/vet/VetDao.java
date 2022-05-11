@@ -18,32 +18,32 @@ import java.util.Set;
  */
 public interface VetDao {
 
-    @SqlQuery("SELECT * FROM vet WHERE id = ?")
+    @SqlQuery("SELECT * FROM vets WHERE id = ?")
     @RegisterBeanMapper(Vet.class)
     Vet getVetBasic(int vetId);
 
-    @SqlQuery("SELECT * FROM vet WHERE name = ?")
+    @SqlQuery("SELECT * FROM vets WHERE name = ?")
     @RegisterBeanMapper(Vet.class)
     Vet getVetBasic(String name);
 
-    @SqlQuery("SELECT * FROM vet ORDER BY name")
+    @SqlQuery("SELECT * FROM vets ORDER BY name")
     @RegisterBeanMapper(Vet.class)
     List<Vet> getAllVetsBasic();
 
-    @SqlUpdate("INSERT INTO vet (name) VALUES (?) returning *")
+    @SqlUpdate("INSERT INTO vets (name) VALUES (?) returning *")
     @GetGeneratedKeys
     int createVetBasic(String name);
 
-    @SqlUpdate("UPDATE vet SET name = ? WHERE id = ?")
+    @SqlUpdate("UPDATE vets SET name = ? WHERE id = ?")
     void updateVetBasic(String name, int id);
 
-    @SqlUpdate("INSERT INTO vet_specialty (vet_id, specialty) VALUES (?, ?)")
+    @SqlUpdate("INSERT INTO vet_specialties (vet_id, specialty) VALUES (?, ?)")
     void createVetSpecialty(int vetId, String specialty);
 
-    @SqlUpdate("DELETE FROM vet_specialty WHERE vet_id = ?")
+    @SqlUpdate("DELETE FROM vet_specialties WHERE vet_id = ?")
     void deleteVetSpecialties(int vetId);
 
-    @SqlQuery("SELECT specialty FROM vet_specialty WHERE vet_id = ?")
+    @SqlQuery("SELECT specialty FROM vet_specialties WHERE vet_id = ?")
     Set<String> getVetSpecialties(int vetId);
 
     @Transaction
