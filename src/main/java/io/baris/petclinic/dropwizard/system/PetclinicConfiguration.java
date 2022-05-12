@@ -18,5 +18,5 @@ public class PetclinicConfiguration extends Configuration {
     private DataSourceFactory database = new DataSourceFactory();
 
     @NotNull
-    private DatabaseExtra databaseExtra;
+    private DatabaseConfig databaseConfig;
 }

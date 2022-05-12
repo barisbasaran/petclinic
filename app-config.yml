@@ -4,7 +4,7 @@ database:
   password: sa
   url: jdbc:postgresql://db:5432/mydb
 
-databaseExtra:
+databaseConfig:
   name: mydb
   dockerImage: postgres
   initScript: "classpath:database/db-init.sql"

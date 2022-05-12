@@ -2,9 +2,11 @@
 
 ## About 
 
-This is an example **RESTful** web service for the **Java Petclinic**.
+This is an example **Java** RESTful web service for a **pet clinic**. 
+It is mainly based on [Dropwizard](https://www.dropwizard.io) 
+and [PostgreSQL](https://www.postgresql.org).  
 
-It is built using the following tools:
+The whole list of tools used is as follows:
 * [Jakarta RESTful Web Services](https://en.wikipedia.org/wiki/Jakarta_RESTful_Web_Services)
 * [Dropwizard](https://www.dropwizard.io)
 * [Docker](https://www.docker.com)
@@ -14,7 +16,7 @@ It is built using the following tools:
 * [Swagger](https://swagger.io)
 * [Maven](https://maven.apache.org)
 
-It is using the following test frameworks:
+For testing:
 * [JUnit](https://junit.org/junit5/)
 * [Mockito](https://site.mockito.org/)
 * [AssertJ](https://assertj.github.io/doc/)

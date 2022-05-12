@@ -1,4 +1,4 @@
-package io.baris.petclinic.dropwizard.home;
+package io.baris.petclinic.dropwizard.homepage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_HTML)
 @Slf4j
 @RequiredArgsConstructor
-public class HomeResource {
+public class HomepageResource {
 
     @Operation(
         summary = "Homepage",
