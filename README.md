@@ -22,7 +22,7 @@ For testing:
 * [AssertJ](https://assertj.github.io/doc/)
 * [Testcontainers](https://www.testcontainers.org)
 
-## Setup
+## Installation
 
 ### Build project
 
@@ -31,11 +31,15 @@ Run `mvn package` to build project with _Maven_.
 
 ### Start application
 
-Run `docker-compose up` to start application with _Docker_.
+Run `docker-compose --profile local up` to start application with _Docker_.
 
 To check that your application is running enter url `http://localhost:8080/`
 
 You may see application's health at `http://localhost:8081/healthcheck`
+
+## Database Design
+
+![](docs/design1.png)
 
 ## Endpoints
 

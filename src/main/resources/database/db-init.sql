@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS vets
 (
-    id   SERIAL,
+    id   SERIAL PRIMARY KEY,
     name TEXT NOT NULL
 );
 ALTER TABLE vets
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS vet_specialties
 
 CREATE TABLE IF NOT EXISTS pets
 (
-    id      SERIAL,
+    id      SERIAL PRIMARY KEY,
     name    TEXT    NOT NULL,
     age     INTEGER NOT NULL,
     species TEXT    NOT NULL
@@ -26,7 +26,7 @@ ALTER TABLE pets
 
 CREATE TABLE IF NOT EXISTS visits
 (
-    id        SERIAL,
+    id        SERIAL PRIMARY KEY,
     pet_id    INTEGER   NOT NULL,
     vet_id    INTEGER   NOT NULL,
     date      TIMESTAMP NOT NULL,

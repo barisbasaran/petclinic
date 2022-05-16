@@ -1,3 +1,5 @@
+env: prod
+
 database:
   driverClass: org.postgresql.Driver
   user: postgres

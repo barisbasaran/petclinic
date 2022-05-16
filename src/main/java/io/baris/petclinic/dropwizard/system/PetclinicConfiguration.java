@@ -5,6 +5,7 @@ import io.dropwizard.db.DataSourceFactory;
 import lombok.Data;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -12,6 +13,9 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class PetclinicConfiguration extends Configuration {
+
+    @NotEmpty
+    String env;
 
     @Valid
     @NotNull

@@ -10,6 +10,9 @@ import static org.eclipse.jetty.servlets.CrossOriginFilter.ALLOWED_HEADERS_PARAM
 import static org.eclipse.jetty.servlets.CrossOriginFilter.ALLOWED_METHODS_PARAM;
 import static org.eclipse.jetty.servlets.CrossOriginFilter.ALLOWED_ORIGINS_PARAM;
 
+/**
+ * Configures CORS
+ */
 public class CorsConfigurer {
 
     public static void configureCors(final Environment environment) {
