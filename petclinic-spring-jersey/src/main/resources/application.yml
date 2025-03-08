@@ -1,0 +1,20 @@
+database:
+  host: localhost
+  name: mydb
+
+spring:
+  datasource:
+    url: "jdbc:postgresql://${database.host}:5432/${database.name}"
+    username: postgres
+    password: sa
+  sql:
+    init:
+      mode: always
+      schema-locations: "classpath*:database/schema.sql"
+      data-locations: "classpath*:database/data.sql"
+  jpa:
+    hibernate:
+      ddl-auto: none
+    #open-in-view=true
+
+#logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter=DEBUG

@@ -1,0 +1,25 @@
+env: prod
+
+database:
+  driverClass: org.postgresql.Driver
+  user: postgres
+  password: sa
+  url: jdbc:postgresql://db:5432/mydb
+
+databaseConfig:
+  name: mydb
+  dockerImage: postgres
+  initScript: "classpath:database/db-init.sql"
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 8080
+  adminConnectors:
+    - type: http
+      port: 8081
+
+logging:
+  level: INFO
+  loggers:
+    io.baris.petclinic: DEBUG
